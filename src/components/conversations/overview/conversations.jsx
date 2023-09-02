@@ -7,7 +7,7 @@ const Conversations = ({searchResults}) => {
     
   
     return ( 
-        <div className='bg-darkGray h-full w-full p-4'>
+        <div className=' h-full w-full p-4'>
             <div className='w-full flex flex-row justify-between items-center'>
             <h1 className='text-[21px] text-white'>Conversations</h1>
             <ButtonMain onClick={()=>navigate("/create")} text={"New"}/>
