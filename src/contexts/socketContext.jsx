@@ -5,6 +5,8 @@ import Encryption from "../encryption";
 import { TokenContext } from "./TokenContext";
 import { toast } from "react-hot-toast";
 import { useQueryClient } from "react-query";
+import axios from "axios";
+import NotificationToast from "../components/notificationToast";
 
 
  const URL = "https://meetup-server.top/"
@@ -36,8 +38,14 @@ const SocketContextProvider = ({children})=>{
     const [typing, setTyping] = useState([])
     const [newNotification,setNewNotification] = useState([])
     const [notifications, setNotifications] = useState([])
+    const [newOnlineContact,setNewOnlineContact] = useState("")
+    const [newOfflineContact,setNewOfflineContact] = useState("")
+    const [remoteStream,setRemoteStream] = useState(null)
+    const [loopBackMedia, setLoobBackMedia] = useState(null)
+    
     
     useEffect(()=>{
+        if(location.pathname !== "/"){
         //perform connection again when the page is re-loaded redirect user to main page
         if(!checkForToken()) return navigate("/login")
         const token = window.localStorage.getItem("token")
@@ -46,17 +54,22 @@ const SocketContextProvider = ({children})=>{
         sock.on("onlineContacts", args => setOnlineContacts(args) )
         sock.on("new_notification",args => setNewNotification(args))
         sock.on("notification",args => setNotifications(args))
+        sock.on("newOnlineContact", args => setNewOnlineContact(args))
+        sock.on("newOfflineContact", args => setNewOfflineContact(args))
         sock.on("conn_error",()=>{toast.error("connection error")})
         navigate("/main",{replace:true})
         setSocket(sock)
         return ()=>{
             sock.disconnect()
         }
+        }
     },[])
 
     useEffect(()=>{
         if(newTyper && newTyper !== user._id){
             setTyping([newTyper,...typing])
+            setNewTyper("")
+
         }
     },[newTyper])
 
@@ -66,13 +79,11 @@ const SocketContextProvider = ({children})=>{
         let  _typing = [...typing]
         _typing = _typing.filter(typer => typer != finishedTyper)
         setTyping(_typing)
+        setFinishedTyper("")
         }
     },[finishedTyper])
 
-    useEffect(()=>{
-        setNewTyper("")
-        setFinishedTyper("")
-    },[typing])
+ 
 
     const connect = ()=>{
         if(!checkForToken()) return navigate("/login")
@@ -82,6 +93,10 @@ const SocketContextProvider = ({children})=>{
         sock.on("onlineContacts", args => setOnlineContacts(args) )
         sock.on("new_notification",args => setNewNotification(args))
         sock.on("notification",args => setNotifications(args))
+        sock.on("newOnlineContact", args => setNewOnlineContact(args))
+        sock.on("newOfflineContact", args => setNewOfflineContact(args))
+        sock.on("conn_error",()=>{toast.error("connection error")})
+        sock.on("call",args=> receiveCall(args.offer,args.conversationId))
         setSocket(sock)
     }
 
@@ -101,11 +116,13 @@ const SocketContextProvider = ({children})=>{
         }
     },[newMessage])
 
+
     useEffect(()=>{
         if(encryptedGroupKey && user){
             setGroupKey(encryption.decryptGroupKey(user.keyPair.privateKey,encryptedGroupKey))
         }
     },[encryptedGroupKey])
+
 
     useEffect(()=>{
         try{
@@ -131,32 +148,25 @@ const SocketContextProvider = ({children})=>{
             queryClient.invalidateQueries(["conversations"])
             setNotifications(newNotification)
             toast.custom((t) => (
-                <div
-                  onClick={()=>{ location.pathname != `/conversation/${newNotification[0].conversationId}` && navigate(`/conversation/${newNotification[0].conversationId}`,{replace:true}); toast.dismiss(t.id)}}
-                  className={`${
-                    t.visible ? 'animate-enter' : 'animate-leave'
-                  } max-w-md w-full bg-black shadow-lg rounded-lg pointer-events-auto cursor-pointer flex border-2 border-mainGray`}
-                >
-                  <div className="flex-1 w-0 p-4">
-                    <div className="flex items-start">
-                      <div className="ml-3 flex-1 text-white">
-                      <p className="text-[18px] font-semibold">New Message</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex border-l-2  border-mainGray">
-                    <button
-                      onClick={() => toast.dismiss(t.id)}
-                      className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-tekhelet hover:text-indigo-500 "
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
+               <NotificationToast t={t} newNotification={newNotification} navigate={navigate} location={location}/>
               ))
               setNewNotification([])
         }
     },[newNotification])
+
+
+    useEffect(()=>{
+        if(newOnlineContact && !onlineContacts.includes(newOnlineContact)){
+            onlineContacts.push(newOnlineContact)
+            setNewOnlineContact("")
+        }
+    },[newOnlineContact])
+
+    useEffect(()=>{
+        if(newOfflineContact){
+            setOnlineContacts(onlineContacts.filter(contact => contact !== newOfflineContact))
+        }
+    },[newOfflineContact])
 
 
 
@@ -196,6 +206,7 @@ const SocketContextProvider = ({children})=>{
         if(socket){
             socket.emit("leaveRoom",{conversationId})
             setMessages([])
+            setCurrentConversation("")
         }
         
     }
@@ -209,16 +220,115 @@ const SocketContextProvider = ({children})=>{
     }
 
     const sendTyping = (isTyping)=>{
-        if(isTyping){
-            return socket.emit("typing",{conversationId:currentConversation})
+        if(socket){
+            if(isTyping){
+                return socket.emit("typing",{conversationId:currentConversation})
+            }
+            socket.emit("finished typing",{conversationId:currentConversation})
+
         }
-        socket.emit("finished typing",{conversationId:currentConversation})
+       
     }
 
-    
+
+  
+
+
+    async function receiveCall(offer,conversationId){
+        try {
+            let {data:iceServers} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
+            iceServers = iceServers.length ?  iceServers:[{'urls': 'stun:stun.l.google.com:19302'}]
+            if(socket){
+                const configuration = {"iceServers":iceServers}
+                const peerConnection = new RTCPeerConnection(configuration)
+                peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+                const media = await navigator.mediaDevices.getUserMedia({audio:true, video:true})
+                setLoobBackMedia(media)
+                media.getTracks().forEach( track => peerConnection.addTrack(track,media))
+                peerConnection.onicecandidate = e => socket.emit("new_iceCandidate",{iceCandidate:e.candidate,conversationId})
+
+                peerConnection.addEventListener("track", async (event)=>{
+                    const [remoteStream] = event.streams; 
+                    setRemoteStream(remoteStream)
+                })
+
+                socket.on("new_iceCandidate", async args => {
+                    await peerConnection.addIceCandidate(args)
+                })
+                
+
+                let answer = await peerConnection.createAnswer();
+                peerConnection.setLocalDescription(answer)
+                answer = {answer,conversationId}
+                peerConnection.addEventListener("")
+                socket.emit("call_response", answer)
+
+                peerConnection.addEventListener("connectionstatechange", event => {
+                    if (peerConnection.connectionState === "connected"){
+                        console.log("peers connected")
+                    }
+                })
+
+               
+
+                
+            }
+        } catch (error) {
+            console.log(error)
+            
+        }
+        
+    }
+
+
+
+
+    async function makeCall(){
+        try {
+        let {data:iceServers} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
+        iceServers = iceServers.length ?  iceServers:[{'urls': 'stun:stun.l.google.com:19302'}]
+        if(socket){
+        const configuration = {'iceServers': iceServers }
+        const peerConnection = new RTCPeerConnection(configuration); 
+
+        socket.on("call_response", async(response)=>{
+            if(response.answer){
+                const remoteDescription = new RTCSessionDescription(response.answer)
+                await peerConnection.setRemoteDescription(remoteDescription)
+            }
+        })
+        const media = await navigator.mediaDevices.getUserMedia({audio:true, video:true})
+        setLoobBackMedia(media)
+        media.getTracks().forEach( track => peerConnection.addTrack(track,media))
+        peerConnection.onicecandidate = e => socket.emit("new_iceCandidate",{iceCandidate:e.candidate,conversationId:currentConversation})
+        socket.on("new_iceCandidate", async args => {
+            await peerConnection.addIceCandidate(args)
+        })
+        peerConnection.addEventListener("track", async (event)=>{
+            const [remoteStream] = event.streams; 
+            setRemoteStream(remoteStream)
+        })
+
+        let offer = await peerConnection.createOffer()
+        peerConnection.setLocalDescription(offer)
+        offer  = {offer, conversationId:currentConversation}
+        console.log(offer)
+        socket.emit("call",offer)
+
+        peerConnection.addEventListener("connectionstatechange", event => {
+            if (peerConnection.connectionState === "connected"){
+                console.log("peers connected")
+            }
+        })
+    }
+    } catch (error) {
+        console.log(error)
+        toast.error("an error occured")
+    }
+    }
 
     return(
-        <SocketContext.Provider value={{joinConversation, connect, messages, onlineGroupUsers, sendMessage, onlineContacts, leaveConversation,disconnect, sendTyping, typing, notifications, groupKey}}>
+        <SocketContext.Provider value={{joinConversation, makeCall, connect, messages, onlineGroupUsers, sendMessage, onlineContacts, leaveConversation,disconnect, sendTyping, typing, notifications, groupKey}}>
             {children}
         </SocketContext.Provider>
     )

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { post, get, put } from "../api/config";
+import { post, get, put, _delete } from "../api/config";
 import jwtDecode from "jwt-decode";
 import { TokenContext } from "./TokenContext";
 import {toast} from "react-hot-toast"
@@ -24,6 +24,7 @@ const UserContextProvider = ({children})=>{
     const [userSearchLoading, setUserSearchLoading] = useState(false)
     const [updateProcessLoading, setUpdateProcessLoading] = useState(false)
     const [profilePicLoading,setProfilePicLoading] = useState(false)
+    const [deleteAccountLoading, setDeleteAccountLoading] = useState(false)
 
     const authenticate = async (payload)=>{
         try {
@@ -153,6 +154,24 @@ const UserContextProvider = ({children})=>{
         }
         
     }
+    const deleteAccount = async()=>{
+        if(!checkForToken()) return navigate("/login", {replace:true})
+        try {
+            setDeleteAccountLoading(true)
+            disconnect()
+            await _delete("users")
+            window.localStorage.removeItem("token")
+            window.localStorage.removeItem("user")
+            navigate("/login",{replace:true})
+        } catch (error) {
+            toast.error("could not delete account")
+        }
+        finally{
+            setDeleteAccountLoading(false)
+            
+        }
+        
+    }
 
     
 
@@ -160,7 +179,7 @@ const UserContextProvider = ({children})=>{
     
 
     return(
-        <UserContext.Provider value={{uploadProfilePic,profilePicLoading, updateProcessLoading,updateUser,acceptRequest, sendRequest, searchUsers, searchedUsers, userSearchLoading, authenticate, getPendingReceived, getPendingSent, pendingReceived, pendingSent, authenticationProcessLoading, getSelf,user, getConversations, userConversations, userContacts, getContacts,logout, setUserConversations }}>
+        <UserContext.Provider value={{uploadProfilePic,  deleteAccount, deleteAccountLoading,profilePicLoading, updateProcessLoading,updateUser,acceptRequest, sendRequest, searchUsers, searchedUsers, userSearchLoading, authenticate, getPendingReceived, getPendingSent, pendingReceived, pendingSent, authenticationProcessLoading, getSelf,user, getConversations, userConversations, userContacts, getContacts,logout, setUserConversations }}>
             {children}
         </UserContext.Provider>
     )

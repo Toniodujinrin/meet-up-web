@@ -26,11 +26,11 @@ const Conversation = () => {
             q1.isError || q2.isError?
             <div className='w-screen h-screen bg-black'></div>:
         
-        <div className='flex w-screen h-screen justify-between'>
+        <div className='flex w-screen min-h-screen bg-black justify-between'>
             <div className='lg:w-[40%] lg:flex hidden  w-full border-r border-midGray '>
                 <Overview/>
             </div>
-            <div className='lg:w-[60%] w-full bg-black'>
+            <div className='lg:w-[60%] w-full'>
                 {
                     conversationDetails&&
                     <Chat/>

@@ -17,6 +17,7 @@ import ConversationContextProvider from "./contexts/conversationContext";
 import SocketContextProvider from "./contexts/socketContext";
 import Contacts from "./pages/main/contacts";
 import Settings from "./pages/main/settings";
+import Home from "./pages/home";
 
 const queryClient = new QueryClient()
 const App = ()=> {
@@ -42,7 +43,7 @@ const App = ()=> {
  <SignUpContextProvider>
  <Routes>
 
- <Route path="/create" element={<NewConversation/>}/>
+  <Route path="/create" element={<NewConversation/>}/>
   <Route path="/login" element={<Login/>}/>
   <Route path="/verifyAccount" element={<VerifyAccount/>} />
   <Route path="/verifyEmail" element={<VerifyEmail/>} />
@@ -51,6 +52,7 @@ const App = ()=> {
   <Route path="/conversation/:id" element={<Conversation/>}/>
   <Route path="/contacts" element={<Contacts/>}/>
   <Route path="/settings" element={<Settings/>}/>
+  <Route path="/" element= {<Home/>}/>
   
 
  </Routes>

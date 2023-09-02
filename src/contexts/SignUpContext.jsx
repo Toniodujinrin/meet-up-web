@@ -11,7 +11,7 @@ const SignUpContextProvider = ({children})=>{
     const navigator = useNavigate()
     const [signUpProcessLoading, setSignUpProcessLoaading] = useState(false)
     const [resendOtpLoading,setResendOtpLoading] = useState(false)
-    const {checkForToken} = useContext(TokenContext)
+    const {checkForTokenAndNotVerify} = useContext(TokenContext)
 
     const signUp = async (payload)=>{
         try {
@@ -29,7 +29,7 @@ const SignUpContextProvider = ({children})=>{
     }
 
     const verifyEmail = async (payload)=>{
-        if(!checkForToken()){
+        if(!checkForTokenAndNotVerify()){
             toast.error("could not verify email")
             return navigator("/login",{replace:true})
         } 
@@ -51,7 +51,7 @@ const SignUpContextProvider = ({children})=>{
     }
 
     const verifyAccount = async (payload)=>{
-        if(!checkForToken()){
+        if(!checkForTokenAndNotVerify()){
             toast.error("could not verify account")
             return navigator("/login",{replace:true})
         } 
@@ -73,7 +73,7 @@ const SignUpContextProvider = ({children})=>{
     }
 
     const resendCode = async()=>{
-        if(!checkForToken()){
+        if(!checkForTokenAndNotVerify()){
             toast.error("could not verify account")
             return navigator("/login",{replace:true})
         }

@@ -35,7 +35,7 @@ const Overview = () => {
    
 
     return ( 
-        <div  className='flex w-full h-full bg-black items-end flex-col'>
+        <div  className='flex w-full h-screen bg-black  flex-col'>
             
             <ProfileHeader
              setDrowpDownShowing={setDrowpDownShowing} 
@@ -47,7 +47,7 @@ const Overview = () => {
                 <li onClick={logout} className='flex flex-row items-center justify-between text-red-600 cursor-pointer p-2'><p>Log out</p><img className='w-[20px] h-[20px]' src="../logoutIcon.svg" alt="" /></li>
             </ul>
             
-            <div className='w-[90%] m-auto'>
+            <div className='w-[90%] flex self-center '>
             <SearchBar 
             placeholder={'Search for users or converations'} 
             value={search} 
