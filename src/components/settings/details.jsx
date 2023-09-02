@@ -3,7 +3,8 @@ import { useState , useContext} from 'react';
 import InputGroup from '../inputGroup';
 import { UserContext } from '../../contexts/UserContext';
 import { verifyAccountSchema } from '../../schemas';
-
+import DangerButton from '../DangerButton';
+import DeletePopUp from '../conversations/chat/detailsComponents/deletePopUp';
 const Details = ({setWebcamShowing}) => {
     const {user, updateUser, updateProcessLoading} = useContext(UserContext)
     const [username, setusername]= useState(user.username)
@@ -11,7 +12,8 @@ const Details = ({setWebcamShowing}) => {
     const [lastName, setLastName] = useState(user.lastName)
     const [bio, setBio]= useState(user.bio)
     const [phone, setPhone] = useState(user.phone)
-   
+    const [deletePopUpShowing, setDeletePopUpShowing] = useState(false)
+    
     const [errors, setErrors]= useState({username:"",firstName:"",lastName:"", bio:"",phone:""})
     const [disabled, setDisabled] = useState(true)
  
@@ -48,7 +50,12 @@ const Details = ({setWebcamShowing}) => {
 
 
     return ( 
-        <div className='w-full h-full flex flex-col lg:gap-8 gap-6 mt-4 items-center'>
+        <div className='flex items-center justify-center'>
+        {
+            deletePopUpShowing &&
+        <DeletePopUp deleteAction={"account"} setDeleteShowing={setDeletePopUpShowing}/>
+        }
+        <div className={`w-full h-full ${deletePopUpShowing && `blur-lg`} flex flex-col lg:gap-8 gap-6 mt-4 items-center`}>
         <div className=' lg:self-start flex flex-col items-end'>
         <div className={`lg:w-[300px] w-[200px] ${!user.profilePic && `p-2`} bg-black border-4 border-midGray aspect-square rounded-full`}>
             
@@ -68,14 +75,19 @@ const Details = ({setWebcamShowing}) => {
         <InputGroup icon={"../bioIcon.svg"} type={"string"} placeholder={"Bio"} value={bio} setValue={setBio} error={errors.bio}/>
         </div>
         
-        <button disabled={disabled}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white h-[50px] lg:self-start rounded-xl flex items-center justify-center w-[300px] mb-4 `}>
+        <button disabled={disabled}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white py-2 lg:self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}>
          {
            updateProcessLoading?
             <div className='dot-flashing'></div>:
             <p>Update</p>
          }
         </button>
+       
         </form>
+        <div className='flex self-start'>
+        <DangerButton onClick={()=>setDeletePopUpShowing(true)} text={"Delete Account"} loading={false}/>
+        </div>
+        </div>
         </div>
      );
 }

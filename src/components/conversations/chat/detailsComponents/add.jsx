@@ -1,20 +1,17 @@
 import React from 'react';
 import { useState } from 'react';
 import { useContext } from 'react';
-import { UserContext } from '../../../../contexts/UserContext';
-import Contact from '../../create/contact';
 import { ConversationContext } from '../../../../contexts/conversationContext';
 import { SocketContext } from '../../../../contexts/socketContext';
+import ContactList from '../../create/contactList';
 
 const Add = ({setCurrentDisplay}) => {
     const [selected,setSelected] = useState([])
-    const {userContacts} = useContext(UserContext)
+   
     const {conversationDetails,addToConversation, conversationProcessLoading } = useContext(ConversationContext)
     const {groupKey} = useContext(SocketContext)
     
-
-    const users = conversationDetails.users.map(user => {return user._id})
-    const listOfContacts = userContacts.filter(contact => !users.includes(contact._id))
+    
     
     
     const select = (_id)=>{
@@ -56,13 +53,7 @@ const Add = ({setCurrentDisplay}) => {
             </button>
             </div>
        
-            <div className='w-full lg:grid grid-cols-3 flex flex-col  mt-4 gap-4'>
-            {
-                listOfContacts.map(contact => 
-                    <Contact key={contact._id} image={contact.profilePic? contact.profilePic.url:""} username={contact.username} _id = {contact._id} selected={selected} select={select}/>
-                )
-            }
-            </div>
+           <ContactList select={select} selected={selected}/>
         </div>
     );
 }

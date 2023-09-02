@@ -6,6 +6,7 @@ import InputGroup from '../../inputGroup';
 import { ConversationContext } from '../../../contexts/conversationContext';
 import BackArrow from '../../backArrow';
 import ButtonMain from '../../buttonMain';
+import ContactList from './contactList';
 
 const Create = () => {
     const {userContacts} = useContext(UserContext)
@@ -38,9 +39,10 @@ const Create = () => {
     }
 
     return (  
-        <div className='w-full h-full bg-black p-4'>
+        <div className='w-full overflow-y-scroll h-screen  bg-black p-4'>
             <div className='flex flex-row justify-between mb-4'>
             <div className='flex gap-3 items-center'>
+            
             <BackArrow/>
             <h1 className='text-white font-semibold text-[32px]'>New</h1>
             </div>
@@ -52,13 +54,9 @@ const Create = () => {
                 <InputGroup placeholder={"Conversation Name"} icon={"../groupIcon.svg"} value={name} setValue={setName} />
 
             }
-            <div className='w-full lg:grid grid-cols-3 flex flex-col  mt-4 gap-4'>
-            {
-                userContacts.map(contact => 
-                    <Contact key={contact._id} image={contact.profilePic? contact.profilePic.url:"../userIcon.svg"} username={contact.username} _id = {contact._id} selected={selected} select={select}/>
-                )
-            }
-            </div>
+
+            <ContactList select={select} selected={selected}/>
+          
         </div>
     );
 }
