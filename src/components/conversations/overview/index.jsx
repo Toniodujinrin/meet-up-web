@@ -35,7 +35,7 @@ const Overview = () => {
    
 
     return ( 
-        <div  className='  flex w-full  items-end flex-col'>
+        <div  className='flex w-full h-full bg-black items-end flex-col'>
             
             <ProfileHeader
              setDrowpDownShowing={setDrowpDownShowing} 
