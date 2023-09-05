@@ -91,8 +91,8 @@ const SocketContextProvider = ({children})=>{
               socket.emit("call_response",{answer:data, conversationId:call.conversationId})
             })
            p.on("connect",args => setPeersConnected(true))
-           p.on("error",(err)=>{p.destroy(); setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
-           p.on("close",(err)=>{p.destroy();  setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
+           p.on("error",(err)=>{p.destroy(); setPeersConnected(false);navigate("/main"); console.log(err); leaveConversation(call.conversationId); setRemoteStream(null)})
+           //p.on("close",(err)=>{p.destroy();  setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
         }
         return () => {
             if (peer) {
@@ -113,8 +113,8 @@ const SocketContextProvider = ({children})=>{
         socket.on("call_response", answer => p.signal(answer))
         p.on("connect",args => setPeersConnected(true))
         p.on("stream", (remoteStream)=>{if(!remoteStream)setRemoteStream(remoteStream)})
-        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
-        p.on("close",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
+        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); leaveConversation(currentConversation); setRemoteStream(null)})
+        //p.on("close",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
     }
 
     useEffect(()=>{ console.log("remote Stream"+remoteStream,stream)},[remoteStream,stream])
