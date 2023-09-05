@@ -112,7 +112,7 @@ const SocketContextProvider = ({children})=>{
         socket.on("call_response", answer => p.signal(answer))
         p.on("connect",args => setPeersConnected(true))
         p.on("stream", (remoteStream)=>{setRemoteStream(remoteStream)})
-        p.on("error",()=>{p.destroy(); navigate("/main"); socket.off("call_response")})
+        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err)})
         p.on("close",()=>{p.destroy(); navigate("/main"); socket.off("call_response")})
     }
 
