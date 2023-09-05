@@ -17,7 +17,7 @@ const CallComp = ({conversationDetails}) => {
         if(streamRef.current && stream){
             streamRef.current.srcObject = stream
         }
-    })
+    },[remoteStream,stream])
 
     return ( 
         <div className='flex flex-col justify-between h-screen '>
@@ -26,7 +26,7 @@ const CallComp = ({conversationDetails}) => {
             (
             remoteStream?
             
-            <video className='w-full h-[50%] ' ref={remoteVideoRef} autoPlay={true} ></video>:
+            <video className='' ref={remoteVideoRef} autoPlay playsInline ></video>:
             <div className='w-full bg-darkGray flex justify-center items-center h-[50%]'>
             <div className='bg-black rounded-full object-cover w-[200px] h-[200px]'>
             {/* <img className='w-full h-full rounded-full' src={conversationDetails.conversationPic.url? conversationDetails.conversationPic.url : "../userIcon.svg"} alt="" /> */}
