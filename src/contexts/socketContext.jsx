@@ -78,7 +78,8 @@ const SocketContextProvider = ({children})=>{
 
 
     useEffect(()=>{
-        if(call){
+       
+        if(call && !peersConnected){
             navigate(`/call/${call.conversationId}`)
             const p = new SimplePeer({initiator:false, trickle:false})
             navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{p.addStream(selfStream);setStream(selfStream)}).catch((err)=>console.log("could not get user media"))
@@ -90,8 +91,8 @@ const SocketContextProvider = ({children})=>{
               socket.emit("call_response",{answer:data, conversationId:call.conversationId})
             })
            p.on("connect",args => setPeersConnected(true))
-           p.on("error",(err)=>{p.destroy(); setPeersConnected(false);navigate("/main"); console.log(err); })
-           //p.on("close",(err)=>{p.destroy();  setPeersConnected(false);navigate("/main"); console.log(err)})
+           p.on("error",(err)=>{p.destroy(); setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
+           p.on("close",(err)=>{p.destroy();  setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
         }
         return () => {
             if (peer) {
@@ -104,16 +105,16 @@ const SocketContextProvider = ({children})=>{
     const makeCall = ()=>{
         navigate(`/call/${currentConversation}`)
         const p = new SimplePeer({initiator:true, trickle:false})
-        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{setStream(selfStream); p.addStream(selfStream)}).catch((err)=> console.log("could not set Media"))
+        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{if(!stream)setStream(selfStream); p.addStream(selfStream)}).catch((err)=> console.log("could not set Media"))
         p.on("signal", (data)=>{
             
             socket.emit("call",{offer:data,conversationId:currentConversation})
         })
         socket.on("call_response", answer => p.signal(answer))
         p.on("connect",args => setPeersConnected(true))
-        p.on("stream", (remoteStream)=>{setRemoteStream(remoteStream)})
-        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err)})
-        p.on("close",()=>{p.destroy(); navigate("/main"); socket.off("call_response")})
+        p.on("stream", (remoteStream)=>{if(!remoteStream)setRemoteStream(remoteStream)})
+        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
+        p.on("close",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
     }
 
     useEffect(()=>{ console.log("remote Stream"+remoteStream,stream)},[remoteStream,stream])
