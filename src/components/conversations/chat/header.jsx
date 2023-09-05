@@ -12,7 +12,7 @@ const Header = ({setCurrentDisplay}) => {
     const {id} = useParams()
     dayjs.extend(relativeTime)
     const {conversationDetails} = useContext(ConversationContext)
-    const {onlineGroupUsers, leaveConversation } = useContext(SocketContext)
+    const {onlineGroupUsers, leaveConversation, makeCall } = useContext(SocketContext)
     
     
     return (  
@@ -39,7 +39,7 @@ const Header = ({setCurrentDisplay}) => {
 
             <div className='flex flex-row gap-4 '>
                 <img  className={'w-[25px] cursor-pointer'} src="../phoneIcon.svg" alt="" />
-                <img className={'w-[25px] cursor-pointer'} src="../videoIcon.svg" alt="" />
+                <img onClick={()=>makeCall()} className={'w-[25px] cursor-pointer'} src="../videoIcon.svg" alt="" />
                 <img onClick={()=>setCurrentDisplay("info")} className={'w-[25px] cursor-pointer'} src="../menuIcon.svg" alt="" />
             </div>
         </div>

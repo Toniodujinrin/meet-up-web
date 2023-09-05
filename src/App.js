@@ -18,6 +18,7 @@ import SocketContextProvider from "./contexts/socketContext";
 import Contacts from "./pages/main/contacts";
 import Settings from "./pages/main/settings";
 import Home from "./pages/home";
+import Call from "./pages/main/call";
 
 const queryClient = new QueryClient()
 const App = ()=> {
@@ -52,6 +53,7 @@ const App = ()=> {
   <Route path="/conversation/:id" element={<Conversation/>}/>
   <Route path="/contacts" element={<Contacts/>}/>
   <Route path="/settings" element={<Settings/>}/>
+  <Route path="/call/:id" element={<Call/>}/>
   <Route path="/" element= {<Home/>}/>
   
 

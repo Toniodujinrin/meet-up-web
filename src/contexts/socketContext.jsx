@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { useQueryClient } from "react-query";
 import axios from "axios";
 import NotificationToast from "../components/notificationToast";
+import SimplePeer from "simple-peer";
 
 
  const URL = "https://meetup-server.top/"
@@ -40,8 +41,13 @@ const SocketContextProvider = ({children})=>{
     const [notifications, setNotifications] = useState([])
     const [newOnlineContact,setNewOnlineContact] = useState("")
     const [newOfflineContact,setNewOfflineContact] = useState("")
+    const [peer, setPeer] = useState(null)
+    const [stream, setStream] = useState(null)
+    const [call, setNewCall] = useState(null)
     const [remoteStream,setRemoteStream] = useState(null)
-    const [loopBackMedia, setLoobBackMedia] = useState(null)
+    const [peersConnected, setPeersConnected] = useState(false)
+ 
+    
     
     
     useEffect(()=>{
@@ -57,13 +63,65 @@ const SocketContextProvider = ({children})=>{
         sock.on("newOnlineContact", args => setNewOnlineContact(args))
         sock.on("newOfflineContact", args => setNewOfflineContact(args))
         sock.on("conn_error",()=>{toast.error("connection error")})
-        navigate("/main",{replace:true})
+        sock.on("offerSignalError", (e)=>{console.log(e)})
+        sock.on("signaling_error", (e)=> console.log(e))
+        sock.on("call",args=>setNewCall(args))
         setSocket(sock)
+        navigate("/main",{replace:true})
+        
         return ()=>{
             sock.disconnect()
         }
         }
     },[])
+
+
+
+    useEffect(()=>{
+        if(call){
+            const p = new SimplePeer({initiator:false, trickle:false, stream})
+            navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{p.addStream(selfStream);setStream(selfStream)}).catch((err)=>"could not get user media")
+            setPeer(p)
+            peer.signal(call.offer)
+            peer.on("stream", remoteStream=>{ console.log(remoteStream); setRemoteStream(remoteStream)})
+            peer.on("signal",(data)=>{
+                console.log(data)
+              socket.emit("call_response",{answer:data, conversationId:call.conversationId})
+            })
+            peer.on("connect",args => setPeersConnected(true))
+            peer.on("error",()=>{peer.destroy();navigate("/main")})
+            peer.on("close",()=>{peer.destroy(); navigate("/main")})
+        }
+        return () => {
+            if (peer) {
+              peer.destroy();
+           }  
+        }
+        
+    },[call])
+
+    const makeCall = ()=>{
+        navigate(`/call/${currentConversation}`)
+        const p = new SimplePeer({initiator:true, trickle:false})
+        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{setStream(selfStream); p.addStream(selfStream)}).catch((err)=> console.log("could not set Media"))
+        setPeer(p)
+        peer.on("signal", (data)=>{
+            console.log(data)
+            socket.emit("call",{offer:data,conversationId:currentConversation})
+        })
+        socket.on("call_response", answer => p.signal(answer))
+        peer.on("connect",args => setPeersConnected(true))
+        peer.on("stream", (remoteStream)=>{setRemoteStream(remoteStream)})
+        peer.on("error",()=>{peer.destroy();navigate("/main")})
+        peer.on("close",()=>{peer.destroy(); navigate("/main")})
+    }
+
+    useEffect(()=>{ console.log("remote Stream"+remoteStream,stream)},[remoteStream,stream])
+
+
+
+
+
 
     useEffect(()=>{
         if(newTyper && newTyper !== user._id){
@@ -96,7 +154,6 @@ const SocketContextProvider = ({children})=>{
         sock.on("newOnlineContact", args => setNewOnlineContact(args))
         sock.on("newOfflineContact", args => setNewOfflineContact(args))
         sock.on("conn_error",()=>{toast.error("connection error")})
-        sock.on("call",args=> receiveCall(args.offer,args.conversationId))
         setSocket(sock)
     }
 
@@ -234,101 +291,9 @@ const SocketContextProvider = ({children})=>{
   
 
 
-    async function receiveCall(offer,conversationId){
-        try {
-            let {data:iceServers} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
-            iceServers = iceServers.length ?  iceServers:[{'urls': 'stun:stun.l.google.com:19302'}]
-            if(socket){
-                const configuration = {"iceServers":iceServers}
-                const peerConnection = new RTCPeerConnection(configuration)
-                peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
-                const media = await navigator.mediaDevices.getUserMedia({audio:true, video:true})
-                setLoobBackMedia(media)
-                media.getTracks().forEach( track => peerConnection.addTrack(track,media))
-                peerConnection.onicecandidate = e => socket.emit("new_iceCandidate",{iceCandidate:e.candidate,conversationId})
-
-                peerConnection.addEventListener("track", async (event)=>{
-                    const [remoteStream] = event.streams; 
-                    setRemoteStream(remoteStream)
-                })
-
-                socket.on("new_iceCandidate", async args => {
-                    await peerConnection.addIceCandidate(args)
-                })
-                
-
-                let answer = await peerConnection.createAnswer();
-                peerConnection.setLocalDescription(answer)
-                answer = {answer,conversationId}
-                peerConnection.addEventListener("")
-                socket.emit("call_response", answer)
-
-                peerConnection.addEventListener("connectionstatechange", event => {
-                    if (peerConnection.connectionState === "connected"){
-                        console.log("peers connected")
-                    }
-                })
-
-               
-
-                
-            }
-        } catch (error) {
-            console.log(error)
-            
-        }
-        
-    }
-
-
-
-
-    async function makeCall(){
-        try {
-        let {data:iceServers} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
-        iceServers = iceServers.length ?  iceServers:[{'urls': 'stun:stun.l.google.com:19302'}]
-        if(socket){
-        const configuration = {'iceServers': iceServers }
-        const peerConnection = new RTCPeerConnection(configuration); 
-
-        socket.on("call_response", async(response)=>{
-            if(response.answer){
-                const remoteDescription = new RTCSessionDescription(response.answer)
-                await peerConnection.setRemoteDescription(remoteDescription)
-            }
-        })
-        const media = await navigator.mediaDevices.getUserMedia({audio:true, video:true})
-        setLoobBackMedia(media)
-        media.getTracks().forEach( track => peerConnection.addTrack(track,media))
-        peerConnection.onicecandidate = e => socket.emit("new_iceCandidate",{iceCandidate:e.candidate,conversationId:currentConversation})
-        socket.on("new_iceCandidate", async args => {
-            await peerConnection.addIceCandidate(args)
-        })
-        peerConnection.addEventListener("track", async (event)=>{
-            const [remoteStream] = event.streams; 
-            setRemoteStream(remoteStream)
-        })
-
-        let offer = await peerConnection.createOffer()
-        peerConnection.setLocalDescription(offer)
-        offer  = {offer, conversationId:currentConversation}
-        console.log(offer)
-        socket.emit("call",offer)
-
-        peerConnection.addEventListener("connectionstatechange", event => {
-            if (peerConnection.connectionState === "connected"){
-                console.log("peers connected")
-            }
-        })
-    }
-    } catch (error) {
-        console.log(error)
-        toast.error("an error occured")
-    }
-    }
-
+    
     return(
-        <SocketContext.Provider value={{joinConversation, makeCall, connect, messages, onlineGroupUsers, sendMessage, onlineContacts, leaveConversation,disconnect, sendTyping, typing, notifications, groupKey}}>
+        <SocketContext.Provider value={{joinConversation, makeCall, connect, messages, onlineGroupUsers, sendMessage, onlineContacts, leaveConversation,disconnect, sendTyping, typing, notifications, groupKey, stream, remoteStream,peersConnected}}>
             {children}
         </SocketContext.Provider>
     )
