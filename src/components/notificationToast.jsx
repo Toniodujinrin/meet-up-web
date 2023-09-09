@@ -2,10 +2,10 @@ import React from 'react';
 
 import { toast } from 'react-hot-toast';
 const NotificationToast = ({t,newNotification,navigate,location}) => {
-   
+
     return (
         <div
-        onClick={()=>{ location.pathname != `/conversation/${newNotification[0].conversationId}` && navigate(`/conversation/${newNotification[0].conversationId}`,{replace:true}); toast.dismiss(t.id)}}
+        onClick={()=>{ location.pathname != `/conversation/${newNotification.conversationId}` && navigate(`/conversation/${newNotification.conversationId}`,{replace:true}); toast.dismiss(t.id)}}
         className={`${
           t.visible ? 'animate-enter' : 'animate-leave'
         } max-w-md w-full bg-black shadow-lg rounded-lg pointer-events-auto cursor-pointer flex border-2 border-mainGray`}
@@ -13,7 +13,7 @@ const NotificationToast = ({t,newNotification,navigate,location}) => {
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
             <div className="ml-3 flex-1 text-white">
-            <p className="text-[18px] font-semibold">New Message</p>
+            <p className="text-[18px] font-semibold">{`New Message in ${newNotification.conversationDetails && newNotification.conversationDetails.name} `}</p>
             </div>
           </div>
         </div>

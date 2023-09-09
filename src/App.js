@@ -19,9 +19,17 @@ import Contacts from "./pages/main/contacts";
 import Settings from "./pages/main/settings";
 import Home from "./pages/home";
 import Call from "./pages/main/call";
+import AOS from "aos"
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient()
 const App = ()=> {
+
+  useEffect(() => {
+    AOS.init();
+    AOS.refresh();
+  }, []);
   
   return (
   <>

@@ -78,43 +78,94 @@ const SocketContextProvider = ({children})=>{
 
 
     useEffect(()=>{
-       
-        if(call && !peersConnected){
-            navigate(`/call/${call.conversationId}`)
-            const p = new SimplePeer({initiator:false, trickle:false})
-            navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{p.addStream(selfStream);setStream(selfStream)}).catch((err)=>console.log("could not get user media"))
-            setPeer(p)
-           p.signal(call.offer)
-           p.on("stream", remoteStream=>{setRemoteStream(remoteStream)})
-           p.on("signal",(data)=>{
-                
-              socket.emit("call_response",{answer:data, conversationId:call.conversationId})
-            })
-           p.on("connect",args => setPeersConnected(true))
-           p.on("error",(err)=>{p.destroy(); setPeersConnected(false);navigate("/main"); console.log(err); leaveConversation(call.conversationId); setRemoteStream(null)})
-           //p.on("close",(err)=>{p.destroy();  setPeersConnected(false);navigate("/main"); console.log(err); setRemoteStream(null)})
-        }
-        return () => {
-            if (peer) {
-              peer.destroy();
-           }  
-        }
+        if(call) answerCall(call)
+   
         
     },[call])
 
-    const makeCall = ()=>{
-        navigate(`/call/${currentConversation}`)
-        const p = new SimplePeer({initiator:true, trickle:false})
-        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then((selfStream)=>{if(!stream)setStream(selfStream); p.addStream(selfStream)}).catch((err)=> console.log("could not set Media"))
-        p.on("signal", (data)=>{
-            
-            socket.emit("call",{offer:data,conversationId:currentConversation})
+    const answerCall = async ({offer,conversationId})=>{
+        try {
+        try {
+            const selfSream = await navigator.mediaDevices.getUserMedia({
+            audio:true,
+            video:true
         })
-        socket.on("call_response", answer => p.signal(answer))
-        p.on("connect",args => setPeersConnected(true))
-        p.on("stream", (remoteStream)=>{if(!remoteStream)setRemoteStream(remoteStream)})
-        p.on("error",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); leaveConversation(currentConversation); setRemoteStream(null)})
-        //p.on("close",(err)=>{p.destroy(); navigate("/main"); socket.off("call_response"); console.log(err); setRemoteStream(null)})
+        setStream(selfSream)
+        } catch (error) {
+            console.log("could not get media")
+        }
+
+        const {data} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
+        if(!data)return toast.error("could not make call")
+        
+        const peer = new RTCPeerConnection({iceServers:data})
+        await peer.setRemoteDescription(offer)
+        const answer = await peer.createAnswer()
+        await peer.setLocalDescription(new RTCSessionDescription(answer))
+        socket.emit("call_response", {answer,conversationId})
+        if (stream){
+        for (let track of stream.getTracks()){
+            peer.addTrack(track,stream)
+        }
+        }
+        peer.addEventListener("track", async e =>{
+            setRemoteStream(e.streams)
+        })
+
+        peer.onicecandidate =  e =>{
+            console.log(e)
+            if(e.candidate) socket.emit("new_iceCandidate",{iceCandidate:e.candidate, conversationId})
+        }
+        socket.on("new_iceCandidate",async args =>{ console.log(args); await peer.addIceCandidate(args)})
+              
+    } catch (error) {
+            console.log(error)
+    }
+
+    }
+
+    const makeCall = async ()=>{
+        //navigate(`/call/${currentConversation}`)
+        try{
+        try {
+            const selfSream = await navigator.mediaDevices.getUserMedia({
+            audio:true,
+            video:true
+            })
+            setStream(selfSream)
+        } catch (error) {
+            console.log("could not set media")
+        }
+
+
+        const {data} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
+        if(!data)return toast.error("could not make call")
+        const peer = new RTCPeerConnection({iceServers:data})
+        let offer = await peer.createOffer()
+        await peer.setLocalDescription(new RTCSessionDescription(offer))
+        offer = {conversationId:currentConversation, offer}
+        socket.emit("call",offer)
+        socket.on("call_response", async args =>{ await peer.setRemoteDescription( new RTCSessionDescription(args)); console.log(args)} )
+        if(stream){
+            for (let track of stream.getTracks()){
+                peer.addTrack(track,stream)
+            }
+        }
+        peer.addEventListener("track", async e =>{
+            setRemoteStream(e.streams)
+        })
+        peer.onicecandidate = e =>{
+            console.log(e)
+            if(e.candidate) socket.emit("new_iceCandidate",{iceCandidate:e.candidate, conversationId: currentConversation})
+        }
+        socket.on("new_iceCandidate",async args =>{console.log(args);await peer.addIceCandidate(args)})
+        }
+        catch(error){
+            console.log(error)
+        }
+ 
+
+        
     }
 
     useEffect(()=>{ console.log("remote Stream"+remoteStream,stream)},[remoteStream,stream])
@@ -204,11 +255,12 @@ const SocketContextProvider = ({children})=>{
     useEffect(()=>{
         if(newNotification.length >0){
             queryClient.invalidateQueries(["conversations"])
+            console.log(newNotification)
             setNotifications(newNotification)
             toast.custom((t) => (
-               <NotificationToast t={t} newNotification={newNotification} navigate={navigate} location={location}/>
+               <NotificationToast t={t} newNotification={newNotification[0]} navigate={navigate} location={location}/>
               ))
-              setNewNotification([])
+            
         }
     },[newNotification])
 
