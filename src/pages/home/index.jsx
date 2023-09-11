@@ -13,13 +13,16 @@ const Home = () => {
         <div className=' scroll-smooth'>
          <nav className={`border-b-2  w-screen  bg-black z-30 fixed  border-midGray h-[70px] flex flex-row items-center justify-between p-3`}>
             <img className='w-[40px] h-[40px]' src="../../logo.svg" alt="" />
+            <div className='flex flex-row items-center gap-4'>
             <ButtonMain text={"Get Started"} onClick={()=>navigate("/signup")}/>
+            <ButtonMain text={"Login"} onClick={()=>navigate("/login")}/>
+            </div>
         </nav>
         <div className='w-screen overflow-hidden pt-[70px] flex flex-col items-center bg-black  min-h-screen'>
            
             
-            <motion.div initial={{opacity:0, scale:0.8}} transition={{duration:1}} animate={{opacity:1, scale:1}} className='flex flex-col h-[100vh] justify-center items-center  gap-y-4 mt-[-50px]'>
-             <img src="../logo.svg" alt="" />
+            <motion.div initial={{opacity:0, scale:0.8}} transition={{duration:0.8}} animate={{opacity:1, scale:1}} className='flex flex-col h-[100vh] justify-center items-center  gap-y-4 mt-[-50px]'>
+            
              <h1 className='text-white text-center  text-[34px]'>
              The only messanger you will ever need
             </h1>
@@ -49,9 +52,9 @@ const Home = () => {
                 <p className='text-white text-center'>get your messages quick!</p>
             </section>
 
-            <div className='bg-tekhelet w-full h-[50px]'>
+           
 
-            </div>
+            
         </div>
 </div>
 

@@ -5,6 +5,8 @@ import { UserContext } from '../../contexts/UserContext';
 import { verifyAccountSchema } from '../../schemas';
 import DangerButton from '../DangerButton';
 import DeletePopUp from '../conversations/chat/detailsComponents/deletePopUp';
+import BigPhoto from '../bigPhoto';
+import { AnimatePresence } from 'framer-motion';
 const Details = ({setWebcamShowing}) => {
     const {user, updateUser, updateProcessLoading} = useContext(UserContext)
     const [username, setusername]= useState(user.username)
@@ -51,19 +53,15 @@ const Details = ({setWebcamShowing}) => {
 
     return ( 
         <div className='flex items-center justify-center'>
+        <AnimatePresence>
         {
             deletePopUpShowing &&
         <DeletePopUp deleteAction={"account"} setDeleteShowing={setDeletePopUpShowing}/>
         }
+        </AnimatePresence>
         <div className={`w-full h-full ${deletePopUpShowing && `blur-lg`} flex flex-col lg:gap-8  mt-4 items-center`}>
         <div className=' self-start flex flex-col items-end'>
-        <div className={`lg:w-[300px] w-[200px] ${!user.profilePic && `p-2`} bg-black border-4 border-midGray aspect-square rounded-full`}>
-            
-        <img className={`w-full h-full ${user.profilePic  && `rounded-full`}`} src={user.profilePic?user.profilePic.url:"../userIcon.svg"} alt="" />
-        </div>
-        <div onClick={()=>setWebcamShowing(true)} className='relative w-[50px] cursor-pointer flex items-center justify-center top-[-50px] lg:top-[-60px] rounded-full z-30 left-[-20px] h-[50px] bg-tekhelet'>
-        <img src="../camera.svg" className='w-[30px] h-[30px]' alt="" />
-        </div>
+            <BigPhoto setWebcamShowing={setWebcamShowing} profilePic={user.profilePic?user.profilePic.url:"../userIcon.svg"}/>
         </div>
 
         <div   className='flex flex-col w-full items-center  ' action="">

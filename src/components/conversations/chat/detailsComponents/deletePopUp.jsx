@@ -3,11 +3,12 @@ import DangerButton from '../../../DangerButton';
 import { ConversationContext } from '../../../../contexts/conversationContext';
 import { UserContext } from '../../../../contexts/UserContext';
 import { useContext } from 'react';
+import { motion } from 'framer-motion';
 const DeletePopUp = ({setDeleteShowing, deleteAction}) => {
     const {leaveConversation, deleteConversation, conversationProcessLoading} = useContext(ConversationContext)
     const {deleteAccount, deleteAccountLoading} = useContext(UserContext)
     return ( 
-        <div className='w-[400px] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-midGray rounded-md'>
+        <motion.div animate={{y:0, opacity:1}} initial={{y:-30, opacity:0}} exit={{y:30, opacity:0}} className='w-[400px] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-midGray rounded-md'>
             <img onClick={()=> setDeleteShowing(false)} src="../close.svg" className=' flex self-end w-[20px] h-[20px] cursor-pointer' alt="" />
             {
                  deleteAction =="leave" &&
@@ -35,7 +36,7 @@ const DeletePopUp = ({setDeleteShowing, deleteAction}) => {
                 <DangerButton  text={"Delete Conversation"} onClick={()=>{deleteConversation()}} loading={conversationProcessLoading}/>
             }
             
-        </div>
+        </motion.div>
      );
 }
  
