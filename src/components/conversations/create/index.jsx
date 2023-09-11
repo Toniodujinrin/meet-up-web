@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { UserContext } from '../../../contexts/UserContext';
-import Contact from './contact';
 import InputGroup from '../../inputGroup';
 import { ConversationContext } from '../../../contexts/conversationContext';
 import BackArrow from '../../backArrow';
@@ -55,7 +54,7 @@ const Create = () => {
 
             }
 
-            <ContactList select={select} selected={selected}/>
+            <ContactList select={select} contacts={userContacts} selected={selected}/>
           
         </div>
     );

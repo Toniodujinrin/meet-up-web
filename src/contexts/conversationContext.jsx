@@ -35,6 +35,7 @@ const ConversationContextProvider  = ({children})=>{
             const {data} = await post("conversations",payload)
             if (data && data.status == "success" ) queryClient.invalidateQueries(["conversations"])
             navigate("/main")
+            toast.success("conversation created successfully")
         } catch (error) {
             if(error.response && error.response.data) return toast.error(error.response.data)
             toast.error("could not create conversation")

@@ -22,6 +22,7 @@ import Call from "./pages/main/call";
 import AOS from "aos"
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 
 const queryClient = new QueryClient()
 const App = ()=> {
@@ -50,6 +51,7 @@ const App = ()=> {
 <ConversationContextProvider>
 <UserContextProvider>
  <SignUpContextProvider>
+  <AnimatePresence>
  <Routes>
 
   <Route path="/create" element={<NewConversation/>}/>
@@ -66,6 +68,7 @@ const App = ()=> {
   
 
  </Routes>
+ </AnimatePresence>
  </SignUpContextProvider>
  </UserContextProvider>
  </ConversationContextProvider>

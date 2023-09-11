@@ -4,10 +4,11 @@ import { useContext } from 'react';
 import { ConversationContext } from '../../../../contexts/conversationContext';
 import { SocketContext } from '../../../../contexts/socketContext';
 import ContactList from '../../create/contactList';
+import { UserContext } from '../../../../contexts/UserContext';
 
 const Add = ({setCurrentDisplay}) => {
     const [selected,setSelected] = useState([])
-   
+    const {userContacts} = useContext(UserContext)
     const {conversationDetails,addToConversation, conversationProcessLoading } = useContext(ConversationContext)
     const {groupKey} = useContext(SocketContext)
     
@@ -53,7 +54,7 @@ const Add = ({setCurrentDisplay}) => {
             </button>
             </div>
        
-           <ContactList select={select} selected={selected}/>
+           <ContactList select={select} contacts={userContacts} selected={selected}/>
         </div>
     );
 }

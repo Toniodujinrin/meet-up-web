@@ -3,10 +3,10 @@ import InputGroup from '../../components/inputGroup';
 import { signUpSchema } from '../../schemas';
 import { useNavigate } from 'react-router-dom';
 import { SignUpContext } from '../../contexts/SignUpContext';
+import { motion } from 'framer-motion';
 const Signup = () => {
   const navigate = useNavigate()
   const {signUpProcessLoading, signUp}= useContext(SignUpContext) 
-    const [loading,setLoading] = useState(false)
     const [email, setEmail]= useState("")
     const [password, setPassoword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -32,7 +32,7 @@ const Signup = () => {
   
   return ( 
     <main className='mainGradient w-screen h-screen flex flex-row items-center'>
-      <div  className={` lg:w-[50%] w-full h-full flex flex-col p-4 items-center justify-center`}>
+      <motion.div initial={{y:-20, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:0.3}}   className={` lg:w-[50%] w-full h-full flex flex-col p-4 items-center justify-center`}>
         <h1 className='text-[42px] text-white font-bold' >Create account</h1>
         <p className='text-mainGray mb-[50px]'>Create an account and meet up with friends</p>
         <form onSubmit={(e)=>{handleSubmit(e)}} className='flex lg:w-[50%] w-[80%] flex-col items-center gap-[50px] mb-[50px]' action="">
@@ -51,7 +51,7 @@ const Signup = () => {
          </form>
         <div className='text-white'><span>Have an account ?</span> <span onClick={()=> navigate("/login")} className='text-tekhelet ml-2 cursor-pointer'> Log in </span></div>
 
-      </div>
+      </motion.div>
       <div className='w-[50%] hidden h-full lg:flex justify-center items-center '>
         <img className='lg:w-[50%] ' src="../undraw.svg"  alt="" />
         </div>

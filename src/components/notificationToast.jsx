@@ -13,7 +13,7 @@ const NotificationToast = ({t,newNotification,navigate,location}) => {
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
             <div className="ml-3 flex-1 text-white">
-            <p className="text-[18px] font-semibold">{`New Message in ${newNotification.conversationDetails && newNotification.conversationDetails.name} `}</p>
+            <p className="text-[18px] font-semibold">{`New Message: ${newNotification.conversationDetails && newNotification.conversationDetails.name} `}</p>
             </div>
           </div>
         </div>

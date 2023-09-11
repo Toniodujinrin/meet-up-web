@@ -55,19 +55,19 @@ const Details = ({setWebcamShowing}) => {
             deletePopUpShowing &&
         <DeletePopUp deleteAction={"account"} setDeleteShowing={setDeletePopUpShowing}/>
         }
-        <div className={`w-full h-full ${deletePopUpShowing && `blur-lg`} flex flex-col lg:gap-8 gap-6 mt-4 items-center`}>
-        <div className=' lg:self-start flex flex-col items-end'>
+        <div className={`w-full h-full ${deletePopUpShowing && `blur-lg`} flex flex-col lg:gap-8  mt-4 items-center`}>
+        <div className=' self-start flex flex-col items-end'>
         <div className={`lg:w-[300px] w-[200px] ${!user.profilePic && `p-2`} bg-black border-4 border-midGray aspect-square rounded-full`}>
             
         <img className={`w-full h-full ${user.profilePic  && `rounded-full`}`} src={user.profilePic?user.profilePic.url:"../userIcon.svg"} alt="" />
         </div>
         <div onClick={()=>setWebcamShowing(true)} className='relative w-[50px] cursor-pointer flex items-center justify-center top-[-50px] lg:top-[-60px] rounded-full z-30 left-[-20px] h-[50px] bg-tekhelet'>
-            <img src="../camera.svg" className='w-[30px] h-[30px]' alt="" />
+        <img src="../camera.svg" className='w-[30px] h-[30px]' alt="" />
         </div>
         </div>
 
-        <form onSubmit={(e)=>handleUpdate(e)}  className='flex flex-col w-full items-center gap-[50px] mb-[50px]' action="">
-        <div className='lg:grid flex flex-col grid-cols-2 w-full gap-6 '>
+        <div   className='flex flex-col w-full items-center  ' action="">
+        <div className='lg:grid flex flex-col grid-cols-2 mb-[50px] w-full gap-6 '>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"First Name"} value={firstName} setValue={setFirstName} error={errors.firstName}/>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"Last Name"} value={lastName} setValue={setLastName} error={errors.lastName}/>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"Username"} value={username} setValue={setusername} error={errors.username}/>
@@ -75,18 +75,18 @@ const Details = ({setWebcamShowing}) => {
         <InputGroup icon={"../bioIcon.svg"} type={"string"} placeholder={"Bio"} value={bio} setValue={setBio} error={errors.bio}/>
         </div>
         
-        <button disabled={disabled}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white py-2 lg:self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}>
+        <button disabled={disabled} onClick={(e)=>{handleUpdate(e)}}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white py-2 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}>
          {
            updateProcessLoading?
             <div className='dot-flashing'></div>:
             <p>Update</p>
          }
         </button>
-       
-        </form>
-        <div className='flex self-start'>
+        <div className='self-start flex'>
         <DangerButton onClick={()=>setDeletePopUpShowing(true)} text={"Delete Account"} loading={false}/>
         </div>
+        </div>
+  
         </div>
         </div>
      );

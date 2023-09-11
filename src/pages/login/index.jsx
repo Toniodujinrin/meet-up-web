@@ -3,7 +3,7 @@ import InputGroup from '../../components/inputGroup';
 import { signUpSchema } from '../../schemas';
 import { UserContext } from '../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
 const Login = () => {
     const navigate = useNavigate()
     const {authenticate, authenticationProcessLoading} = useContext(UserContext)
@@ -28,8 +28,8 @@ const Login = () => {
     }
   }
   return ( 
-    <main className={` mainGradient w-screen h-screen  flex flex-row  `}>
-     <div  className={`flex flex-col p-4 items-center justify-center lg:w-[50%] w-full h-full`}>
+    <main  className={` mainGradient w-screen h-screen  flex flex-row  `}>
+     <motion.div initial={{y:-20, opacity:0}} animate={{y:0, opacity:1}} transition={{duration:0.3}}   className={`flex flex-col p-4 items-center justify-center lg:w-[50%] w-full h-full`}>
         <h1 className='text-[42px] text-white font-bold' >Log In</h1>
         <p className='text-mainGray mb-[50px]'>Log into your Meetup account</p>
         <form onSubmit={(e)=>{handleSubmit(e)}} className='flex flex-col lg:w-[50%] w-[80%] items-center gap-[50px] mb-[50px]' action="">
@@ -49,7 +49,7 @@ const Login = () => {
          </form>
         <div className='text-white'><span>No account ?</span> <span onClick={()=>navigate("/signup")} className='text-tekhelet ml-2 cursor-pointer'> Sign Up</span></div>
 
-      </div>
+      </motion.div>
         <div className='lg:w-[50%] hidden h-full lg:flex justify-center items-center '>
         <img className='lg:w-[50%] ' src="../loginImage.svg"  alt="" />
         </div>
