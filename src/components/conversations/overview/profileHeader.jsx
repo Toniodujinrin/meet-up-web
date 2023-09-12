@@ -5,7 +5,7 @@ import { UserContext } from '../../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 
-const ProfileHeader = ({setDrowpDownShowing, dropDownShowing}) => {
+const ProfileHeader = ({setDrowpDownShowing, dropDownShowing, dropDownToggleRef}) => {
     const {user} = useContext(UserContext)
     const navigate = useNavigate()
     
@@ -23,7 +23,7 @@ const ProfileHeader = ({setDrowpDownShowing, dropDownShowing}) => {
             
         
             
-            <img onClick={()=>setDrowpDownShowing(!dropDownShowing)} src="../menuIcon.svg" className='w-[30px] z-20 relative aspect-square cursor-pointer' alt="" />
+            <img ref={dropDownToggleRef} onClick={()=>setDrowpDownShowing(!dropDownShowing)} src="../menuIcon.svg" className='w-[30px] z-20 relative aspect-square cursor-pointer' alt="" />
           
            
             </div>
