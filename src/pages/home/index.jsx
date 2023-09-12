@@ -47,7 +47,7 @@ const Home = () => {
         <div className='w-screen overflow-hidden pt-[70px] flex flex-col items-center bg-black  min-h-screen'>
            
             
-        <motion.div initial={{opacity:0, scale:0.8}} transition={{duration:0.8}} animate={{opacity:1, scale:1}} className='flex flex-col p-4 my-[100px]   justify-center items-start   gap-y-4 '>
+        <motion.div initial={{opacity:0, scale:0.8}} transition={{duration:0.3}} animate={{opacity:1, scale:1}} className='flex flex-col p-4 my-[100px]   justify-center items-start   gap-y-4 '>
             
              <h1 className='text-white   text-[34px]'>
              The only messanger you will ever need
