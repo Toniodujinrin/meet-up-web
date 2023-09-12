@@ -3,6 +3,7 @@ import InputGroup from '../../components/inputGroup';
 import { verifyAccountSchema } from '../../schemas';
 import { SignUpContext } from '../../contexts/SignUpContext';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 const VerifyAccount = () => {
     const {signUpProcessLoading, verifyAccount} = useContext(SignUpContext)
     const navigate = useNavigate()
