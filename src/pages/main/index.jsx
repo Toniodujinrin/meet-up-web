@@ -12,7 +12,7 @@ const Main = () => {
         <>
         
         {
-            q1.isLoading||q2.isLoading?
+            (q1.isLoading||q2.isLoading)?
             <LoadingPage/>
             :
             q1.isError || q2.isError?
