@@ -6,7 +6,7 @@ import { verifyAccountSchema } from '../../schemas';
 import DangerButton from '../DangerButton';
 import DeletePopUp from '../conversations/chat/detailsComponents/deletePopUp';
 import BigPhoto from '../bigPhoto';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 const Details = ({setWebcamShowing}) => {
     const {user, updateUser, updateProcessLoading} = useContext(UserContext)
     const [username, setusername]= useState(user.username)
@@ -60,29 +60,29 @@ const Details = ({setWebcamShowing}) => {
         }
         </AnimatePresence>
         <div className={`w-full h-full ${deletePopUpShowing && `blur-lg`} flex flex-col lg:gap-8  mt-4 items-center`}>
-        <div className=' self-start flex flex-col items-end'>
+        <motion.div initial={{y:-30, opacity:0}} animate={{y:0, opacity:1}} transition={{delay:0.1}}  className=' self-start flex flex-col items-end'>
             <BigPhoto setWebcamShowing={setWebcamShowing} profilePic={user.profilePic?user.profilePic.url:"../userIcon.svg"}/>
-        </div>
+        </motion.div>
 
         <div   className='flex flex-col w-full items-center  ' action="">
-        <div className='lg:grid flex flex-col grid-cols-2 mb-[50px] w-full gap-6 '>
+        <motion.div initial={{y:-30, opacity:0}} animate={{y:0, opacity:1}} transition={{delay:0.2}} className='lg:grid flex flex-col grid-cols-2 mb-[50px] w-full gap-6 '>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"First Name"} value={firstName} setValue={setFirstName} error={errors.firstName}/>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"Last Name"} value={lastName} setValue={setLastName} error={errors.lastName}/>
         <InputGroup icon={"../userIcon.svg"} type={"string"} placeholder={"Username"} value={username} setValue={setusername} error={errors.username}/>
         <InputGroup icon={"../phoneIcon.svg"} type={"string"} placeholder={"Phone Number"} value={phone} setValue={setPhone} error={errors.phone}/>
         <InputGroup icon={"../bioIcon.svg"} type={"string"} placeholder={"Bio"} value={bio} setValue={setBio} error={errors.bio}/>
-        </div>
+        </motion.div>
         
-        <button disabled={disabled} onClick={(e)=>{handleUpdate(e)}}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white py-2 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}>
+        <motion.button initial={{y:-30, opacity:0}} animate={{y:0, opacity:1}} transition={{delay:0.3}} disabled={disabled} onClick={(e)=>{handleUpdate(e)}}  className={`${disabled? `bg-midGray`:`bg-tekhelet`} text-white py-2 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}>
          {
            updateProcessLoading?
             <div className='dot-flashing'></div>:
             <p>Update</p>
          }
-        </button>
-        <div className='self-start flex'>
+        </motion.button>
+        <motion.div initial={{y:-30, opacity:0}} animate={{y:0, opacity:1}} transition={{delay:0.3}} className='self-start flex'>
         <DangerButton onClick={()=>setDeletePopUpShowing(true)} text={"Delete Account"} loading={false}/>
-        </div>
+        </motion.div>
         </div>
   
         </div>
