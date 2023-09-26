@@ -105,7 +105,9 @@ const UserContextProvider = ({children})=>{
         if(!checkForToken()) return navigate("/login", {replace:true})
         try {
             await post(`users/add/${id}`)
-            queryClient.invalidateQueries(["contacts","pendingSent","pendingReceived"])
+            try {
+                getPendingSent()
+            } catch (error) {}
             toast.success("contact request sent")
         } catch (error) {
             toast.error("could not send contact request")
@@ -116,7 +118,11 @@ const UserContextProvider = ({children})=>{
         if(!checkForToken()) return navigate("/login", {replace:true})
         try {
             await post(`users/accept/${id}`)
-            queryClient.invalidateQueries(["contacts","pendingSent","pendingReceived"])
+            try{
+                getContacts()
+                getPendingReceived()
+            }
+            catch(err){}
             toast.success("contact request accepted")
         } catch (error) {
             toast.error("could not accept contact request")
