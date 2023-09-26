@@ -9,348 +9,357 @@ import axios from "axios";
 import NotificationToast from "../components/notificationToast";
 import SimplePeer from "simple-peer";
 
-
- const URL = "https://meetup-server.top/"
+const URL = "https://meetup-server.top/";
 
 //  const URL = "https://localhost:3004/"
 
+export const SocketContext = createContext();
+const sock = io(URL, {
+  autoConnect: false,
+  withCredentials: true,
+  secure: true,
+});
 
-export const SocketContext = createContext()
-const sock = io(URL,{autoConnect:false,  withCredentials:true, secure:true})
+const SocketContextProvider = ({ children }) => {
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  const encryption = new Encryption();
+  const [socket, setSocket] = useState();
+  const navigate = useNavigate();
+  const { checkForToken } = useContext(TokenContext);
+  const [onlineContacts, setOnlineContacts] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [onlineGroupUsers, setOnlineGroupUsers] = useState([]);
+  const [groupKey, setGroupKey] = useState("");
+  const [previousMessages, setPreviousMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState({});
+  const [encryptedGroupKey, setEncryptedGroupKey] = useState();
+  const [currentConversation, setCurrentConversation] = useState("");
+  const [finishedTyper, setFinishedTyper] = useState("");
+  const [newTyper, setNewTyper] = useState("");
+  const [typing, setTyping] = useState([]);
+  const [newNotification, setNewNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [newOnlineContact, setNewOnlineContact] = useState("");
+  const [newOfflineContact, setNewOfflineContact] = useState("");
+  const [peer, setPeer] = useState(null);
+  const [stream, setStream] = useState(null);
+  const [call, setNewCall] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
+  const [peersConnected, setPeersConnected] = useState(false);
 
-const SocketContextProvider = ({children})=>{
-    const location = useLocation()
-    const queryClient = useQueryClient()
-    const user = JSON.parse(window.localStorage.getItem("user"))
-    const encryption = new Encryption()
-    const [socket,setSocket] = useState()
-    const navigate = useNavigate()
-    const {checkForToken} = useContext(TokenContext)
-    const [onlineContacts,setOnlineContacts] = useState([])
-    const [messages,setMessages] = useState([])
-    const [onlineGroupUsers,setOnlineGroupUsers] = useState([])
-    const [groupKey, setGroupKey] = useState("")
-    const [previousMessages, setPreviousMessages] = useState([])
-    const [newMessage,setNewMessage] = useState({})
-    const [encryptedGroupKey,setEncryptedGroupKey] = useState()
-    const [currentConversation,setCurrentConversation] = useState('')
-    const [finishedTyper, setFinishedTyper] = useState("")
-    const [newTyper, setNewTyper] = useState("")
-    const [typing, setTyping] = useState([])
-    const [newNotification,setNewNotification] = useState([])
-    const [notifications, setNotifications] = useState([])
-    const [newOnlineContact,setNewOnlineContact] = useState("")
-    const [newOfflineContact,setNewOfflineContact] = useState("")
-    const [peer, setPeer] = useState(null)
-    const [stream, setStream] = useState(null)
-    const [call, setNewCall] = useState(null)
-    const [remoteStream,setRemoteStream] = useState(null)
-    const [peersConnected, setPeersConnected] = useState(false)
- 
-    
-    
-    
-    useEffect(()=>{
-        if(location.pathname !== "/"){
-        //perform connection again when the page is re-loaded redirect user to main page
-        if(!checkForToken()) return navigate("/login")
-        const token = window.localStorage.getItem("token")
-        sock.auth = {token}
-        sock.connect()
-        sock.on("onlineContacts", args => setOnlineContacts(args) )
-        sock.on("new_notification",args => setNewNotification(args))
-        sock.on("notification",args => setNotifications(args))
-        sock.on("newOnlineContact", args => setNewOnlineContact(args))
-        sock.on("newOfflineContact", args => setNewOfflineContact(args))
-        sock.on("conn_error",()=>{toast.error("connection error")})
-        sock.on("offerSignalError", (e)=>{console.log(e)})
-        sock.on("signaling_error", (e)=> console.log(e))
-        sock.on("call",args=>setNewCall(args))
-        setSocket(sock)
-        navigate("/main",{replace:true})
-        
-        return ()=>{
-            sock.disconnect()
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      //perform connection again when the page is re-loaded redirect user to main page
+      if (!checkForToken()) return navigate("/login");
+      const token = window.localStorage.getItem("token");
+      sock.auth = { token };
+      sock.connect();
+      sock.on("onlineContacts", (args) => setOnlineContacts(args));
+      sock.on("new_notification", (args) => setNewNotification(args));
+      sock.on("notification", (args) => setNotifications(args));
+      sock.on("newOnlineContact", (args) => setNewOnlineContact(args));
+      sock.on("newOfflineContact", (args) => setNewOfflineContact(args));
+      sock.on("conn_error", () => {
+        toast.error("connection error");
+      });
+      sock.on("offerSignalError", (e) => {
+        console.log(e);
+      });
+      sock.on("signaling_error", (e) => console.log(e));
+      sock.on("call", (args) => setNewCall(args));
+      setSocket(sock);
+      navigate("/main", { replace: true });
+
+      return () => {
+        sock.disconnect();
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (call) answerCall(call);
+  }, [call]);
+
+  const answerCall = async ({ offer, conversationId }) => {
+    try {
+      try {
+        const selfSream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: true,
+        });
+        setStream(selfSream);
+      } catch (error) {
+        console.log("could not get media");
+      }
+
+      const { data } = await axios.get(
+        `https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`
+      );
+      if (!data) return toast.error("could not make call");
+
+      const peer = new RTCPeerConnection({ iceServers: data });
+      await peer.setRemoteDescription(offer);
+      const answer = await peer.createAnswer();
+      await peer.setLocalDescription(new RTCSessionDescription(answer));
+      socket.emit("call_response", { answer, conversationId });
+      if (stream) {
+        for (let track of stream.getTracks()) {
+          peer.addTrack(track, stream);
         }
-        }
-    },[])
+      }
+      peer.addEventListener("track", async (e) => {
+        setRemoteStream(e.streams);
+      });
 
-
-
-    useEffect(()=>{
-        if(call) answerCall(call)
-   
-        
-    },[call])
-
-    const answerCall = async ({offer,conversationId})=>{
-        try {
-        try {
-            const selfSream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-        })
-        setStream(selfSream)
-        } catch (error) {
-            console.log("could not get media")
-        }
-
-        const {data} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
-        if(!data)return toast.error("could not make call")
-        
-        const peer = new RTCPeerConnection({iceServers:data})
-        await peer.setRemoteDescription(offer)
-        const answer = await peer.createAnswer()
-        await peer.setLocalDescription(new RTCSessionDescription(answer))
-        socket.emit("call_response", {answer,conversationId})
-        if (stream){
-        for (let track of stream.getTracks()){
-            peer.addTrack(track,stream)
-        }
-        }
-        peer.addEventListener("track", async e =>{
-            setRemoteStream(e.streams)
-        })
-
-        peer.onicecandidate =  e =>{
-            console.log(e)
-            if(e.candidate) socket.emit("new_iceCandidate",{iceCandidate:e.candidate, conversationId})
-        }
-        socket.on("new_iceCandidate",async args =>{ console.log(args); await peer.addIceCandidate(args)})
-              
+      peer.onicecandidate = (e) => {
+        console.log(e);
+        if (e.candidate)
+          socket.emit("new_iceCandidate", {
+            iceCandidate: e.candidate,
+            conversationId,
+          });
+      };
+      socket.on("new_iceCandidate", async (args) => {
+        console.log(args);
+        await peer.addIceCandidate(args);
+      });
     } catch (error) {
-            console.log(error)
+      console.log(error);
     }
+  };
 
+  const makeCall = async () => {
+    //navigate(`/call/${currentConversation}`)
+    try {
+      try {
+        const selfSream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: true,
+        });
+        setStream(selfSream);
+      } catch (error) {
+        console.log("could not set media");
+      }
+
+      const { data } = await axios.get(
+        `https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`
+      );
+      if (!data) return toast.error("could not make call");
+      const peer = new RTCPeerConnection({ iceServers: data });
+      let offer = await peer.createOffer();
+      await peer.setLocalDescription(new RTCSessionDescription(offer));
+      offer = { conversationId: currentConversation, offer };
+      socket.emit("call", offer);
+      socket.on("call_response", async (args) => {
+        await peer.setRemoteDescription(new RTCSessionDescription(args));
+        console.log(args);
+      });
+      if (stream) {
+        for (let track of stream.getTracks()) {
+          peer.addTrack(track, stream);
+        }
+      }
+      peer.addEventListener("track", async (e) => {
+        setRemoteStream(e.streams);
+      });
+      peer.onicecandidate = (e) => {
+        console.log(e);
+        if (e.candidate)
+          socket.emit("new_iceCandidate", {
+            iceCandidate: e.candidate,
+            conversationId: currentConversation,
+          });
+      };
+      socket.on("new_iceCandidate", async (args) => {
+        console.log(args);
+        await peer.addIceCandidate(args);
+      });
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const makeCall = async ()=>{
-        //navigate(`/call/${currentConversation}`)
-        try{
-        try {
-            const selfSream = await navigator.mediaDevices.getUserMedia({
-            audio:true,
-            video:true
-            })
-            setStream(selfSream)
-        } catch (error) {
-            console.log("could not set media")
-        }
+  useEffect(() => {
+    console.log("remote Stream" + remoteStream, stream);
+  }, [remoteStream, stream]);
 
-
-        const {data} = await axios.get(`https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`)
-        if(!data)return toast.error("could not make call")
-        const peer = new RTCPeerConnection({iceServers:data})
-        let offer = await peer.createOffer()
-        await peer.setLocalDescription(new RTCSessionDescription(offer))
-        offer = {conversationId:currentConversation, offer}
-        socket.emit("call",offer)
-        socket.on("call_response", async args =>{ await peer.setRemoteDescription( new RTCSessionDescription(args)); console.log(args)} )
-        if(stream){
-            for (let track of stream.getTracks()){
-                peer.addTrack(track,stream)
-            }
-        }
-        peer.addEventListener("track", async e =>{
-            setRemoteStream(e.streams)
-        })
-        peer.onicecandidate = e =>{
-            console.log(e)
-            if(e.candidate) socket.emit("new_iceCandidate",{iceCandidate:e.candidate, conversationId: currentConversation})
-        }
-        socket.on("new_iceCandidate",async args =>{console.log(args);await peer.addIceCandidate(args)})
-        }
-        catch(error){
-            console.log(error)
-        }
- 
-
-        
+  useEffect(() => {
+    if (newTyper && newTyper !== user._id) {
+      setTyping([newTyper, ...typing]);
+      setNewTyper("");
     }
+  }, [newTyper]);
 
-    useEffect(()=>{ console.log("remote Stream"+remoteStream,stream)},[remoteStream,stream])
-
-
-
-
-
-
-    useEffect(()=>{
-        if(newTyper && newTyper !== user._id){
-            setTyping([newTyper,...typing])
-            setNewTyper("")
-
-        }
-    },[newTyper])
-
-
-    useEffect(()=>{
-        if(finishedTyper){
-        let  _typing = [...typing]
-        _typing = _typing.filter(typer => typer != finishedTyper)
-        setTyping(_typing)
-        setFinishedTyper("")
-        }
-    },[finishedTyper])
-
- 
-
-    const connect = ()=>{
-        if(!checkForToken()) return navigate("/login")
-        const token = window.localStorage.getItem("token")
-        sock.auth = {token}
-        sock.connect()
-        sock.on("onlineContacts", args => setOnlineContacts(args) )
-        sock.on("new_notification",args => setNewNotification(args))
-        sock.on("notification",args => setNotifications(args))
-        sock.on("newOnlineContact", args => setNewOnlineContact(args))
-        sock.on("newOfflineContact", args => setNewOfflineContact(args))
-        sock.on("conn_error",()=>{toast.error("connection error")})
-        setSocket(sock)
+  useEffect(() => {
+    if (finishedTyper) {
+      let _typing = [...typing];
+      _typing = _typing.filter((typer) => typer != finishedTyper);
+      setTyping(_typing);
+      setFinishedTyper("");
     }
+  }, [finishedTyper]);
 
-    useEffect(()=>{
-        try {
-            queryClient.invalidateQueries(["conversations"])
-            if(newMessage && groupKey){
-                const _newMessage = newMessage
-                _newMessage.body = JSON.parse(encryption.decryptMessage(_newMessage.body, groupKey))
-                if(_newMessage.senderId._id !== user._id){
-                    socket.emit("messageRead",{conversationId:currentConversation})
-                }
-                setMessages([...messages,_newMessage])
+  const connect = () => {
+    if (!checkForToken()) return navigate("/login");
+    const token = window.localStorage.getItem("token");
+    sock.auth = { token };
+    sock.connect();
+    sock.on("onlineContacts", (args) => setOnlineContacts(args));
+    sock.on("new_notification", (args) => setNewNotification(args));
+    sock.on("notification", (args) => setNotifications(args));
+    sock.on("newOnlineContact", (args) => setNewOnlineContact(args));
+    sock.on("newOfflineContact", (args) => setNewOfflineContact(args));
+    sock.on("conn_error", () => {
+      toast.error("connection error");
+    });
+    setSocket(sock);
+  };
+
+  useEffect(() => {
+    try {
+      queryClient.invalidateQueries(["conversations"]);
+      if (newMessage && groupKey) {
+        const _newMessage = newMessage;
+        _newMessage.body = JSON.parse(
+          encryption.decryptMessage(_newMessage.body, groupKey)
+        );
+        if (_newMessage.senderId._id !== user._id) {
+          socket.emit("messageRead", { conversationId: currentConversation });
         }
-        } catch (error) {
-            
-        }
-    },[newMessage])
+        setMessages([...messages, _newMessage]);
+      }
+    } catch (error) {}
+  }, [newMessage]);
 
-
-    useEffect(()=>{
-        if(encryptedGroupKey && user){
-            setGroupKey(encryption.decryptGroupKey(user.keyPair.privateKey,encryptedGroupKey))
-        }
-    },[encryptedGroupKey])
-
-
-    useEffect(()=>{
-        try{
-        if(groupKey && previousMessages){
-            const _previousMessages = [...previousMessages]
-            _previousMessages.map(message => {
-                if(typeof message.body == "string") message.body = JSON.parse(encryption.decryptMessage(message.body,groupKey))
-            })
-            setMessages(_previousMessages)
-            setPreviousMessages()
-        }
-       }
-       catch(error){
-        
-       }
-    },[groupKey,previousMessages])
-
-
-
-
-    useEffect(()=>{
-        if(newNotification.length >0){
-            queryClient.invalidateQueries(["conversations"])
-            console.log(newNotification)
-            setNotifications(newNotification)
-            toast.custom((t) => (
-               <NotificationToast t={t} newNotification={newNotification[0]} navigate={navigate} location={location}/>
-              ))
-            
-        }
-    },[newNotification])
-
-
-    useEffect(()=>{
-        if(newOnlineContact && !onlineContacts.includes(newOnlineContact)){
-            onlineContacts.push(newOnlineContact)
-            setNewOnlineContact("")
-        }
-    },[newOnlineContact])
-
-    useEffect(()=>{
-        if(newOfflineContact){
-            setOnlineContacts(onlineContacts.filter(contact => contact !== newOfflineContact))
-        }
-    },[newOfflineContact])
-
-
-
-
-
-
-
-
-
-
-    const disconnect = ()=>{
-        if(socket){
-            socket.disconnect()
-        }
-        
+  useEffect(() => {
+    if (encryptedGroupKey && user) {
+      setGroupKey(
+        encryption.decryptGroupKey(user.keyPair.privateKey, encryptedGroupKey)
+      );
     }
+  }, [encryptedGroupKey]);
 
-    const joinConversation = (conversationId)=>{
-        if(socket){
-            if(currentConversation){
-                leaveConversation(currentConversation)
-            }
-            setCurrentConversation(conversationId)
-            socket.emit("join",{conversationId})
-            socket.on("typing", args =>setNewTyper(args))
-            socket.on("notification", args => setNotifications(args))
-            socket.on("new_notification",args => setNewNotification(args))
-            socket.on("finished typing", args => setFinishedTyper(args))
-            socket.on("previousMessages", args =>setPreviousMessages(args))
-            socket.on("groupKey", args => setEncryptedGroupKey(args))
-            socket.on("onlineUsers", args => setOnlineGroupUsers(args))
-            socket.on("new_message", args => setNewMessage(args))
-        }
+  useEffect(() => {
+    try {
+      if (groupKey && previousMessages) {
+        const _previousMessages = [...previousMessages];
+        _previousMessages.map((message) => {
+          if (typeof message.body == "string")
+            message.body = JSON.parse(
+              encryption.decryptMessage(message.body, groupKey)
+            );
+        });
+        setMessages(_previousMessages);
+        setPreviousMessages();
+      }
+    } catch (error) {}
+  }, [groupKey, previousMessages]);
+
+  useEffect(() => {
+    if (newNotification.length > 0) {
+      queryClient.invalidateQueries(["conversations"]);
+      console.log(newNotification);
+      setNotifications(newNotification);
+      toast.custom((t) => (
+        <NotificationToast
+          t={t}
+          newNotification={newNotification[0]}
+          navigate={navigate}
+          location={location}
+        />
+      ));
     }
+  }, [newNotification]);
 
-    const leaveConversation = (conversationId)=>{
-        if(socket){
-            socket.emit("leaveRoom",{conversationId})
-            setMessages([])
-            setCurrentConversation("")
-        }
-        
+  useEffect(() => {
+    if (newOnlineContact && !onlineContacts.includes(newOnlineContact)) {
+      onlineContacts.push(newOnlineContact);
+      setNewOnlineContact("");
     }
+  }, [newOnlineContact]);
 
-    const sendMessage = (payload)=>{
-        if(groupKey && socket){
-        payload.body = encryption.encryptMessage(payload.body, groupKey)
-        socket.emit("message",payload)
-        }
-        else toast.error("could not send message")
+  useEffect(() => {
+    if (newOfflineContact) {
+      setOnlineContacts(
+        onlineContacts.filter((contact) => contact !== newOfflineContact)
+      );
     }
+  }, [newOfflineContact]);
 
-    const sendTyping = (isTyping)=>{
-        if(socket){
-            if(isTyping){
-                return socket.emit("typing",{conversationId:currentConversation})
-            }
-            socket.emit("finished typing",{conversationId:currentConversation})
-
-        }
-       
+  const disconnect = () => {
+    if (socket) {
+      socket.disconnect();
     }
+  };
 
+  const joinConversation = (conversationId) => {
+    if (socket) {
+      if (currentConversation) {
+        leaveConversation(currentConversation);
+      }
+      setCurrentConversation(conversationId);
+      socket.emit("join", { conversationId });
+      socket.on("typing", (args) => setNewTyper(args));
+      socket.on("notification", (args) => setNotifications(args));
+      socket.on("new_notification", (args) => setNewNotification(args));
+      socket.on("finished typing", (args) => setFinishedTyper(args));
+      socket.on("previousMessages", (args) => setPreviousMessages(args));
+      socket.on("groupKey", (args) => setEncryptedGroupKey(args));
+      socket.on("onlineUsers", (args) => setOnlineGroupUsers(args));
+      socket.on("new_message", (args) => setNewMessage(args));
+    }
+  };
 
-  
+  const leaveConversation = (conversationId) => {
+    if (socket) {
+      socket.emit("leaveRoom", { conversationId });
+      setMessages([]);
+      setCurrentConversation("");
+    }
+  };
 
+  const sendMessage = (payload) => {
+    if (groupKey && socket) {
+      payload.body = encryption.encryptMessage(payload.body, groupKey);
+      socket.emit("message", payload);
+    } else toast.error("could not send message");
+  };
 
-    
-    return(
-        <SocketContext.Provider value={{joinConversation, makeCall, connect, messages, onlineGroupUsers, sendMessage, onlineContacts, leaveConversation,disconnect, sendTyping, typing, notifications, groupKey, stream, remoteStream,peersConnected}}>
-            {children}
-        </SocketContext.Provider>
-    )
+  const sendTyping = (isTyping) => {
+    if (socket) {
+      if (isTyping) {
+        return socket.emit("typing", { conversationId: currentConversation });
+      }
+      socket.emit("finished typing", { conversationId: currentConversation });
+    }
+  };
 
-}
+  return (
+    <SocketContext.Provider
+      value={{
+        joinConversation,
+        makeCall,
+        connect,
+        messages,
+        onlineGroupUsers,
+        sendMessage,
+        onlineContacts,
+        leaveConversation,
+        disconnect,
+        sendTyping,
+        typing,
+        notifications,
+        groupKey,
+        stream,
+        remoteStream,
+        peersConnected,
+      }}
+    >
+      {children}
+    </SocketContext.Provider>
+  );
+};
 
-export default SocketContextProvider
+export default SocketContextProvider;
