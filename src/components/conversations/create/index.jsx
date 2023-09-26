@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import { UserContext } from '../../../contexts/UserContext';
 import InputGroup from '../../inputGroup';
+import { useNavigate } from 'react-router-dom';
 import { ConversationContext } from '../../../contexts/conversationContext';
 import BackArrow from '../../backArrow';
 import ButtonMain from '../../buttonMain';
@@ -9,6 +10,7 @@ import ContactList from './contactList';
 
 
 const Create = () => {
+    const navigate = useNavigate()
     const {userContacts} = useContext(UserContext)
     const {createConversation} = useContext(ConversationContext)
     const [selected,setSelected] = useState([])
@@ -46,7 +48,11 @@ const Create = () => {
             <BackArrow/>
             <h1 className='text-white font-semibold text-[32px]'>New</h1>
             </div>
+            <div className='gap-3 flex flex-row items-center'>
+            <ButtonMain onClick={()=>{navigate("/contacts")}} disabled={false} text={"Add Contacts"}/>
             <ButtonMain onClick={handleCreate} disabled={selected.length == 0 || (selected.length > 1 && name.length ===0)} text={"Create"}/>
+            </div>
+            
            
             </div>
             {

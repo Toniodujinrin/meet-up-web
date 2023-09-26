@@ -22,7 +22,7 @@ const AddUsers = () => {
             <SearchBar 
             value={value} 
             setValue={setValue} 
-            placeholder={"search for a contact"}
+            placeholder={"search for a user by their email"}
             handleSearch={searchUsers}
             />
 
