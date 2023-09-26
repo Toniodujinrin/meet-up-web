@@ -75,7 +75,7 @@ const Chat = () => {
             <div className='h-screen w-full flex flex-col'>
             <Header setCurrentDisplay = {setCurrentDisplay}/>
             <div className='bg-black flex justify-center items-center flex-col w-full h-[calc(100vh-200px)]'>
-                <motion.div animate={{y:0}} initial={{y:-20}} className='mx-auto w-fit p-2 mt-3 items-center flex flex-row gap-3 rounded-md bg-midGray'>
+                <motion.div animate={{y:0}} initial={{y:-20}} className='mx-auto w-fit p-2 mt-3 items-center border border-mediumGray flex flex-row gap-3 rounded-md bg-midGray'>
                     <img src="../lockIcon.svg" className='w-[20px] h-[20px]' alt="" />
                     <p className='text-mainGray'>End to End Encrypted</p>
                 </motion.div>

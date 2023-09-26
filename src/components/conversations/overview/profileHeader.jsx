@@ -10,7 +10,7 @@ const ProfileHeader = ({setDrowpDownShowing, dropDownShowing, dropDownToggleRef}
     const navigate = useNavigate()
     
     return ( 
-        <div className='flex flex-row p-4 bg-darkGray border-b z-20 w-full justify-between h-[100px] border-midGray items-center'>
+        <div className='flex flex-row p-4 bg-midGray border-b z-20 w-full justify-between h-[100px] border-mediumGray items-center'>
             <div onClick={()=> navigate("/settings")} className=' flex flex-row cursor-pointer  gap-4'>
             <ProfilePic image={user.profilePic?user.profilePic.url:"../userIcon.svg"}/>
             <div>

@@ -5,7 +5,8 @@ module.exports = {
     extend: {
       colors:{
         mainGray:"#7a7c80",
-        midGray:"#212121",
+        mediumGray:"#303030",
+        midGray:"#191919",
         darkGray:"#111111",
         tekhelet:"#4F359B"
       }

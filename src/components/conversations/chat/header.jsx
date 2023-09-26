@@ -16,7 +16,7 @@ const Header = ({setCurrentDisplay}) => {
     
     
     return (  
-        <div className='bg-darkGray w-full h-[100px] flex border-b border-midGray flex-row items-center justify-between p-4 '>
+        <div className='bg-midGray w-full h-[100px] flex border-b border-mediumGray flex-row items-center justify-between p-4 '>
             <div className='flex flex-row gap-3 items-center'>
             <img onClick={()=>{navigate("/main"); leaveConversation(id)}} src="../chevron.svg" className='w-[30px] h-[30px] cursor-pointer rotate-180 lg:hidden' alt="" />
 

@@ -20,7 +20,7 @@ const Conversation = ({name, image,_id,lastMessage}) => {
     },[notifications])
     
     return ( 
-        <div onClick={()=>{ location.pathname != `/conversation/${_id}` && navigate(`/conversation/${_id}`,{replace:true})}} className='w-full border-b p-4 cursor-pointer  border-midGray gap-4 flex flex-row  items-center justify-between h-[100px]'>
+        <div onClick={()=>{ location.pathname != `/conversation/${_id}` && navigate(`/conversation/${_id}`,{replace:true})}} className='w-full border-b p-4 cursor-pointer  border-mediumGray gap-4 flex flex-row  items-center justify-between h-[100px]'>
         <div className='flex items-center gap-4'>
         <ProfilePic image={image}/>
         <div>
