@@ -126,6 +126,7 @@ const Chat = () => {
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
         navigate("/main");
+        socket.off("call_response");
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
@@ -133,6 +134,13 @@ const Chat = () => {
 
       peer.on("close", () => {
         console.log("peer closed");
+        toast("Call Ended", { icon: "☎️" });
+        peer.destroy();
+        navigate("/main");
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+
         socket.off("call_response");
       });
     } catch (error) {
@@ -173,9 +181,22 @@ const Chat = () => {
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
         navigate("/main");
+        socket.off("call_response");
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
+      });
+
+      peer.on("close", () => {
+        console.log("peer closed");
+        toast("Call Ended", { icon: "☎️" });
+        peer.destroy();
+        navigate("/main");
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+
+        socket.off("call_response");
       });
     } catch (error) {
       console.log(error);
