@@ -65,7 +65,7 @@ const App = () => {
                         />
                         <Route path="/contacts" element={<Contacts />} />
                         <Route path="/settings" element={<Settings />} />
-                        <Route path="/call/:id" element={<Call />} />
+                        <Route path="/call/:type/:id?" element={<Call />} />
                         <Route path="/" element={<Home />} />
                       </Routes>
                     </AnimatePresence>

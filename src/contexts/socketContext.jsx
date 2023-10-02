@@ -7,7 +7,6 @@ import { toast } from "react-hot-toast";
 import { useQueryClient } from "react-query";
 import axios from "axios";
 import NotificationToast from "../components/notificationToast";
-import SimplePeer from "simple-peer";
 
 const URL = "https://meetup-server.top/";
 
@@ -43,147 +42,67 @@ const SocketContextProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [newOnlineContact, setNewOnlineContact] = useState("");
   const [newOfflineContact, setNewOfflineContact] = useState("");
-  const [peer, setPeer] = useState(null);
-  const [stream, setStream] = useState(null);
   const [call, setNewCall] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const [peersConnected, setPeersConnected] = useState(false);
+  const [turnServers, setTurnServers] = useState([]);
+
+  const connect = () => {
+    if (!checkForToken()) return navigate("/login");
+    const token = window.localStorage.getItem("token");
+    sock.auth = { token };
+    sock.connect();
+    sock.on("onlineContacts", (args) => setOnlineContacts(args));
+    sock.on("new_notification", (args) => setNewNotification(args));
+    sock.on("notification", (args) => setNotifications(args));
+    sock.on("newOnlineContact", (args) => setNewOnlineContact(args));
+    sock.on("newOfflineContact", (args) => setNewOfflineContact(args));
+    sock.on("call", (args) => {
+      if (!call && args.conversationId && args.offer) {
+        setNewCall(args);
+        navigate(`/conversation/${args.conversationId}`);
+      }
+    });
+
+    //error handling
+    sock.on("offerSignalError", (e) => {
+      toast.error("receiver unavailable");
+      navigate("/main", { replace: true });
+    });
+    sock.on("signaling_error", (e) => {
+      toast.error("something went wrong during call process");
+      navigate("/main", { replace: true });
+    });
+    sock.on("conn_error", () => {
+      toast.error("could not connect to conversation");
+      navigate("/main", { replace: true });
+    });
+    sock.on("replySignalError", () => {
+      toast.error("could not reply to call");
+      navigate("/main", { replace: true });
+    });
+
+    setSocket(sock);
+    getTurnServers();
+  };
 
   useEffect(() => {
     if (location.pathname !== "/") {
       //perform connection again when the page is re-loaded redirect user to main page
-      if (!checkForToken()) return navigate("/login");
-      const token = window.localStorage.getItem("token");
-      sock.auth = { token };
-      sock.connect();
-      sock.on("onlineContacts", (args) => setOnlineContacts(args));
-      sock.on("new_notification", (args) => setNewNotification(args));
-      sock.on("notification", (args) => setNotifications(args));
-      sock.on("newOnlineContact", (args) => setNewOnlineContact(args));
-      sock.on("newOfflineContact", (args) => setNewOfflineContact(args));
-      sock.on("conn_error", () => {
-        toast.error("connection error");
-      });
-      sock.on("offerSignalError", (e) => {
-        console.log(e);
-      });
-      sock.on("signaling_error", (e) => console.log(e));
-      sock.on("call", (args) => setNewCall(args));
-      setSocket(sock);
+      connect();
       navigate("/main", { replace: true });
-
       return () => {
         sock.disconnect();
       };
     }
   }, []);
 
-  useEffect(() => {
-    if (call) answerCall(call);
-  }, [call]);
-
-  const answerCall = async ({ offer, conversationId }) => {
+  const getTurnServers = async () => {
     try {
-      try {
-        const selfSream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
-        });
-        setStream(selfSream);
-      } catch (error) {
-        console.log("could not get media");
-      }
-
-      const { data } = await axios.get(
+      const { data: turnServers } = await axios.get(
         `https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`
       );
-      if (!data) return toast.error("could not make call");
-
-      const peer = new RTCPeerConnection({ iceServers: data });
-      await peer.setRemoteDescription(offer);
-      const answer = await peer.createAnswer();
-      await peer.setLocalDescription(new RTCSessionDescription(answer));
-      socket.emit("call_response", { answer, conversationId });
-      if (stream) {
-        for (let track of stream.getTracks()) {
-          peer.addTrack(track, stream);
-        }
-      }
-      peer.addEventListener("track", async (e) => {
-        setRemoteStream(e.streams);
-      });
-
-      peer.onicecandidate = (e) => {
-        console.log(e);
-        if (e.candidate)
-          socket.emit("new_iceCandidate", {
-            iceCandidate: e.candidate,
-            conversationId,
-          });
-      };
-      socket.on("new_iceCandidate", async (args) => {
-        console.log(args);
-        await peer.addIceCandidate(args);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      if (turnServers) setTurnServers(turnServers);
+    } catch (error) {}
   };
-
-  const makeCall = async () => {
-    //navigate(`/call/${currentConversation}`)
-    try {
-      try {
-        const selfSream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
-        });
-        setStream(selfSream);
-      } catch (error) {
-        console.log("could not set media");
-      }
-
-      const { data } = await axios.get(
-        `https://toniodujinrin.metered.live/api/v1/turn/credentials?apiKey=${`1cfab4b0d52fcd15df7dc08b2edeefa47c32`}`
-      );
-      if (!data) return toast.error("could not make call");
-      const peer = new RTCPeerConnection({ iceServers: data });
-      let offer = await peer.createOffer();
-      await peer.setLocalDescription(new RTCSessionDescription(offer));
-      offer = { conversationId: currentConversation, offer };
-      socket.emit("call", offer);
-      socket.on("call_response", async (args) => {
-        await peer.setRemoteDescription(new RTCSessionDescription(args));
-        console.log(args);
-      });
-      if (stream) {
-        for (let track of stream.getTracks()) {
-          peer.addTrack(track, stream);
-        }
-      }
-      peer.addEventListener("track", async (e) => {
-        setRemoteStream(e.streams);
-      });
-      peer.onicecandidate = (e) => {
-        console.log(e);
-        if (e.candidate)
-          socket.emit("new_iceCandidate", {
-            iceCandidate: e.candidate,
-            conversationId: currentConversation,
-          });
-      };
-      socket.on("new_iceCandidate", async (args) => {
-        console.log(args);
-        await peer.addIceCandidate(args);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    console.log("remote Stream" + remoteStream, stream);
-  }, [remoteStream, stream]);
 
   useEffect(() => {
     if (newTyper && newTyper !== user._id) {
@@ -200,22 +119,6 @@ const SocketContextProvider = ({ children }) => {
       setFinishedTyper("");
     }
   }, [finishedTyper]);
-
-  const connect = () => {
-    if (!checkForToken()) return navigate("/login");
-    const token = window.localStorage.getItem("token");
-    sock.auth = { token };
-    sock.connect();
-    sock.on("onlineContacts", (args) => setOnlineContacts(args));
-    sock.on("new_notification", (args) => setNewNotification(args));
-    sock.on("notification", (args) => setNotifications(args));
-    sock.on("newOnlineContact", (args) => setNewOnlineContact(args));
-    sock.on("newOfflineContact", (args) => setNewOfflineContact(args));
-    sock.on("conn_error", () => {
-      toast.error("connection error");
-    });
-    setSocket(sock);
-  };
 
   useEffect(() => {
     try {
@@ -296,9 +199,7 @@ const SocketContextProvider = ({ children }) => {
 
   const joinConversation = (conversationId) => {
     if (socket) {
-      if (currentConversation) {
-        leaveConversation(currentConversation);
-      }
+      leaveConversation();
       setCurrentConversation(conversationId);
       socket.emit("join", { conversationId });
       socket.on("typing", (args) => setNewTyper(args));
@@ -312,9 +213,9 @@ const SocketContextProvider = ({ children }) => {
     }
   };
 
-  const leaveConversation = (conversationId) => {
-    if (socket) {
-      socket.emit("leaveRoom", { conversationId });
+  const leaveConversation = () => {
+    if (socket && currentConversation) {
+      socket.emit("leaveRoom", { conversationId: currentConversation });
       setMessages([]);
       setCurrentConversation("");
     }
@@ -340,7 +241,6 @@ const SocketContextProvider = ({ children }) => {
     <SocketContext.Provider
       value={{
         joinConversation,
-        makeCall,
         connect,
         messages,
         onlineGroupUsers,
@@ -352,9 +252,9 @@ const SocketContextProvider = ({ children }) => {
         typing,
         notifications,
         groupKey,
-        stream,
-        remoteStream,
-        peersConnected,
+        socket,
+        call,
+        turnServers,
       }}
     >
       {children}

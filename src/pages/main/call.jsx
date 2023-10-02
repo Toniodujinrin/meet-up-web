@@ -13,8 +13,10 @@ const Call = () => {
     useContext(ConversationContext);
   const { joinConversation } = useContext(SocketContext);
   useEffect(() => {
-    getConversation(id);
-    joinConversation(id);
+    if (id) {
+      getConversation(id);
+      joinConversation(id);
+    }
   }, [id]);
   const { getSelf, getConversations } = useContext(UserContext);
   const [q1, q2] = useQueries([
