@@ -85,7 +85,7 @@ const SocketContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/" && location.pathname !== "/login") {
       //perform connection again when the page is re-loaded redirect user to main page
       connect();
       navigate("/main", { replace: true });
@@ -243,6 +243,7 @@ const SocketContextProvider = ({ children }) => {
         joinConversation,
         connect,
         messages,
+        setNewCall,
         onlineGroupUsers,
         sendMessage,
         onlineContacts,

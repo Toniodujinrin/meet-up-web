@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { post, get, put, _delete } from "../api/config";
 import jwtDecode from "jwt-decode";
-import { TokenContext } from "./TokenContext";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from "./socketContext";
@@ -11,7 +10,6 @@ export const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { checkForToken } = useContext(TokenContext);
   const { connect, disconnect } = useContext(SocketContext);
   const [user, setUser] = useState({});
   const [authenticationProcessLoading, setAuthenticationProcessLoading] =
@@ -29,7 +27,7 @@ const UserContextProvider = ({ children }) => {
   const authenticate = async (payload) => {
     try {
       setAuthenticationProcessLoading(true);
-      const res = await post("auth", payload);
+      const res = await post("auth", payload, false);
       const token = res.headers.authorization;
       if (!token) return toast.error("could not log in, try again later");
       window.localStorage.setItem("token", token);
@@ -60,37 +58,34 @@ const UserContextProvider = ({ children }) => {
   };
 
   const getSelf = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
+    //if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/self");
     if (data) return setUser(data);
   };
 
   const getConversations = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
+    // if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/conversations");
     if (data) return setUserConversations(data);
   };
 
   const getContacts = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
+    // if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/contacts");
     if (data) return setUserContacts(data);
   };
 
   const getPendingSent = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/pending/sent");
     if (data) return setPendingSent(data);
   };
 
   const getPendingReceived = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/pending/received");
     if (data) return setPendingReceived(data);
   };
 
   const searchUsers = async (searchString) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setUserSearchLoading(true);
       const { data } = await get(`users/searchUser/${searchString}`);
@@ -103,7 +98,6 @@ const UserContextProvider = ({ children }) => {
   };
 
   const sendRequest = async (id) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       await post(`users/add/${id}`);
       try {
@@ -116,7 +110,6 @@ const UserContextProvider = ({ children }) => {
   };
 
   const acceptRequest = async (id) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       await post(`users/accept/${id}`);
       try {
@@ -130,7 +123,6 @@ const UserContextProvider = ({ children }) => {
   };
 
   const updateUser = async (payload) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setUpdateProcessLoading(true);
       await put("users", payload);
@@ -144,7 +136,6 @@ const UserContextProvider = ({ children }) => {
   };
 
   const uploadProfilePic = async (payload) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setProfilePicLoading(true);
       await post("users/uploadImage", payload);
@@ -157,7 +148,6 @@ const UserContextProvider = ({ children }) => {
     }
   };
   const deleteAccount = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setDeleteAccountLoading(true);
       disconnect();

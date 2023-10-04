@@ -29,6 +29,7 @@ const Chat = () => {
     call,
     turnServers,
     socket,
+    setNewCall,
   } = useContext(SocketContext);
   const [callAccepted, setCallAccepted] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
@@ -129,22 +130,27 @@ const Chat = () => {
       peer.on("error", (e) => {
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
-        navigate("/main");
-        socket.off("call_response");
+        setIncomingCall(false);
+        setNewCall(null);
+        setCallAccepted(false);
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
+        socket.off("call_response");
+        navigate("/main");
       });
 
       peer.on("close", () => {
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
-        navigate("/main");
+        setIncomingCall(false);
+        setNewCall(null);
+        setCallAccepted(false);
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
-
         socket.off("call_response");
+        navigate("/main");
       });
     } catch (error) {
       toast.error("could not initiate call");
@@ -167,7 +173,6 @@ const Chat = () => {
       setPeer(peer);
 
       peer.on("signal", (answer) => {
-        console.log("sending response", answer);
         socket.emit("call_response", { answer, conversationId });
       });
 
@@ -187,8 +192,11 @@ const Chat = () => {
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
-        navigate("/main");
+        setIncomingCall(false);
+        setNewCall(null);
+        setCallAccepted(false);
         socket.off("call_response");
+        navigate("/main");
       });
 
       peer.on("close", () => {
@@ -198,6 +206,9 @@ const Chat = () => {
         });
         socket.off("call_response");
         peer.destroy();
+        setIncomingCall(false);
+        setNewCall(null);
+        setCallAccepted(false);
         navigate("/main");
       });
     } catch (error) {
@@ -209,6 +220,9 @@ const Chat = () => {
     if (peer) {
       peer.emit("close");
       peer.destroy();
+      setIncomingCall(false);
+      setNewCall(null);
+      setCallAccepted(false);
       _stream.getTracks().forEach(function (track) {
         track.stop();
       });
@@ -217,19 +231,40 @@ const Chat = () => {
   };
 
   return (
-    <>
+    <div className={`${incomingCall && `flex items-center justify-center`}`}>
       {incomingCall && (
-        <div className="w-[300px] h-[300px]  flex items-center justify-center bg-white">
-          <button
-            onClick={() => {
-              answerCall(call);
-              setCallAccepted(true);
-              setIncomingCall(false);
-              setCurrentDisplay("call");
-            }}
-          >
-            Answer
-          </button>
+        <div className="w-[300px] h-fit  absolute p-4  flex flex-col items-center  bg-midGray rounded-lg">
+          <h1 className="text-white text-[28px] mb-4 font-semibold">
+            Incoming Call{" "}
+          </h1>
+          <div className="flex items-center justify-between w-full">
+            <button
+              onClick={() => {}}
+              className=" bg-red-600 rounded-full w-[50px] aspect-square flex items-center justify-center"
+            >
+              <img
+                src="../endCallIcon.svg"
+                className="w-[30px] h-[40px]"
+                alt=""
+              />
+            </button>
+
+            <button
+              className=" bg-green-600 rounded-full w-[50px] flex items-center justify-center aspect-square"
+              onClick={() => {
+                answerCall(call);
+                setCallAccepted(true);
+                setIncomingCall(false);
+                setCurrentDisplay("call");
+              }}
+            >
+              <img
+                src="../phoneIconWhite.svg"
+                className="w-[30px] h-[30px]"
+                alt=""
+              />
+            </button>
+          </div>
         </div>
       )}
       {currentDisplay == "chat" && (
@@ -292,7 +327,7 @@ const Chat = () => {
           endCall={endCall}
         />
       )}
-    </>
+    </div>
   );
 };
 

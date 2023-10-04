@@ -15,7 +15,7 @@ const SignUpContextProvider = ({ children }) => {
   const signUp = async (payload) => {
     try {
       setSignUpProcessLoaading(true);
-      const res = await post("users", payload);
+      const res = await post("users", payload, false);
       const token = res.headers.authorization;
       window.localStorage.setItem("token", token);
       toast.success("success");
@@ -36,7 +36,7 @@ const SignUpContextProvider = ({ children }) => {
     }
     try {
       setSignUpProcessLoaading(true);
-      const res = await post("users/verifyEmail", payload);
+      const res = await post("users/verifyEmail", payload, false);
       const token = res.headers.authorization;
       window.localStorage.setItem("token", token);
       toast.success("email verified");
@@ -57,7 +57,7 @@ const SignUpContextProvider = ({ children }) => {
     }
     try {
       setSignUpProcessLoaading(true);
-      const res = await post("users/verifyAccount", payload);
+      const res = await post("users/verifyAccount", payload, false);
       const token = res.headers.authorization;
       window.localStorage.setItem("token", token);
       toast.success("account verified");
@@ -79,7 +79,7 @@ const SignUpContextProvider = ({ children }) => {
     const toastId = toast.loading("Sending new OTP");
     try {
       setResendOtpLoading(true);
-      await post("users/resendOtp");
+      await post("users/resendOtp", {}, false);
       toast.success("new code sent");
     } catch (error) {
       if (error.response && error.response.data)

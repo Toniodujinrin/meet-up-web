@@ -3,27 +3,25 @@ import React, { useEffect } from "react";
 const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
   console.log(conversationDetails);
   return (
-    <div className="flex flex-col w-screen justify-between h-screen ">
-      {remoteVideo && (
+    <div className="flex flex-col w-full justify-between h-screen ">
+      <div className="h-[calc(100%-70px)] flex flex-col items-center w-full">
+        {remoteVideo && (
+          <video
+            className="h-[50%] w-full"
+            playsInline
+            ref={remoteVideo}
+            autoPlay
+          />
+        )}
+
         <video
-          className="h-[calc(100vh-70px)]"
+          className={`w-full h-[50%]`}
           playsInline
-          ref={remoteVideo}
+          muted
+          ref={selfVideo}
           autoPlay
         />
-      )}
-
-      <video
-        className={`${
-          remoteVideo
-            ? `w-[300px] h-[300px] rounded-[20px] ml-4 absolute`
-            : `w-screen h-screen`
-        }`}
-        playsInline
-        muted
-        ref={selfVideo}
-        autoPlay
-      />
+      </div>
 
       <div className="w-full h-[70px] bg-midGray flex flex-row items-center justify-center">
         <button

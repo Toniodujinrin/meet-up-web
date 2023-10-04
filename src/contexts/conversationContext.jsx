@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { _delete, post } from "../api/config";
 import { toast } from "react-hot-toast";
-import { TokenContext } from "./TokenContext";
 import { useNavigate } from "react-router-dom";
 import { get } from "../api/config";
 import { useQueryClient } from "react-query";
@@ -12,12 +11,10 @@ const ConversationContextProvider = ({ children }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [conversationDetails, setconversationDetails] = useState(null);
-  const { checkForToken } = useContext(TokenContext);
   const [conversationProcessLoading, setConversationProcessLoading] =
     useState(false);
 
   const getConversation = async (id) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       const { data } = await get(`conversations/${id}`);
       if (data) setconversationDetails(data);
@@ -30,7 +27,6 @@ const ConversationContextProvider = ({ children }) => {
   };
 
   const createConversation = async (payload) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       const { data } = await post("conversations", payload);
       if (data && data.status == "success")
@@ -45,7 +41,6 @@ const ConversationContextProvider = ({ children }) => {
   };
 
   const addToConversation = async (payload) => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setConversationProcessLoading(true);
       const { data } = await post("conversations/add", payload);
@@ -63,7 +58,6 @@ const ConversationContextProvider = ({ children }) => {
   };
 
   const leaveConversation = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setConversationProcessLoading(true);
       const { data } = await post(
@@ -84,7 +78,6 @@ const ConversationContextProvider = ({ children }) => {
   };
 
   const deleteConversation = async () => {
-    if (!checkForToken()) return navigate("/login", { replace: true });
     try {
       setConversationProcessLoading(true);
       const { data } = await _delete(
