@@ -4,10 +4,10 @@ const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
   console.log(conversationDetails);
   return (
     <div className="flex flex-col w-full justify-between h-screen ">
-      <div className="h-[calc(100%-70px)] flex flex-col items-center w-full">
+      <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col items-center w-full">
         {remoteVideo && (
           <video
-            className="h-[50%] w-full"
+            className="min-h-[50%] min-w-full"
             playsInline
             ref={remoteVideo}
             autoPlay
@@ -15,7 +15,7 @@ const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
         )}
 
         <video
-          className={`w-full h-[50%]`}
+          className={` min-h-[50%] min-w-full`}
           playsInline
           muted
           ref={selfVideo}
