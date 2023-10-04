@@ -20,6 +20,7 @@ const Chat = () => {
   const ref = useRef();
   const navigate = useNavigate();
   const [currentDisplay, setCurrentDisplay] = useState("chat");
+
   const {
     messages,
     sendMessage,
@@ -33,6 +34,8 @@ const Chat = () => {
   const [incomingCall, setIncomingCall] = useState(false);
   const { conversationDetails } = useContext(ConversationContext);
   const [value, setValue] = useState("");
+  const [peer, setPeer] = useState("");
+  const [_stream, setStream] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState();
   const { id } = useParams();
@@ -85,6 +88,7 @@ const Chat = () => {
     if (selfVideo.current) {
       selfVideo.current.srcObject = selfStream;
     }
+    setStream(selfStream);
     return selfStream;
   };
 
@@ -100,6 +104,7 @@ const Chat = () => {
           iceServers: turnServers,
         },
       });
+      setPeer(peer);
 
       peer.on("signal", (data) => {
         const offer = { conversationId: id, offer: data };
@@ -122,7 +127,6 @@ const Chat = () => {
       });
 
       peer.on("error", (e) => {
-        console.log(e);
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
         navigate("/main");
@@ -133,7 +137,6 @@ const Chat = () => {
       });
 
       peer.on("close", () => {
-        console.log("peer closed");
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
         navigate("/main");
@@ -144,6 +147,7 @@ const Chat = () => {
         socket.off("call_response");
       });
     } catch (error) {
+      toast.error("could not initiate call");
       console.log(error);
     }
   };
@@ -151,7 +155,7 @@ const Chat = () => {
   const answerCall = async ({ offer, conversationId }) => {
     try {
       const stream = await initiateMedia();
-      console.log(stream);
+
       const peer = new SimplePeer({
         initiator: false,
         trickle: false,
@@ -160,6 +164,7 @@ const Chat = () => {
           iceServers: turnServers,
         },
       });
+      setPeer(peer);
 
       peer.on("signal", (answer) => {
         console.log("sending response", answer);
@@ -177,36 +182,44 @@ const Chat = () => {
         console.log("peer connected");
       });
       peer.on("error", (e) => {
-        console.log(e);
         toast("Call Ended", { icon: "☎️" });
         peer.destroy();
-        navigate("/main");
-        socket.off("call_response");
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
+        navigate("/main");
+        socket.off("call_response");
       });
 
       peer.on("close", () => {
-        console.log("peer closed");
         toast("Call Ended", { icon: "☎️" });
-        peer.destroy();
-        navigate("/main");
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
-
         socket.off("call_response");
+        peer.destroy();
+        navigate("/main");
       });
     } catch (error) {
       console.log(error);
     }
   };
 
+  const endCall = () => {
+    if (peer) {
+      peer.emit("close");
+      peer.destroy();
+      _stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+      navigate("/main");
+    }
+  };
+
   return (
     <>
       {incomingCall && (
-        <div className="w-[300px] h-[300px] flex items-center justify-center bg-white">
+        <div className="w-[300px] h-[300px]  flex items-center justify-center bg-white">
           <button
             onClick={() => {
               answerCall(call);
@@ -276,6 +289,7 @@ const Chat = () => {
           conversationDetails={conversationDetails}
           selfVideo={selfVideo}
           remoteVideo={remoteVideo}
+          endCall={endCall}
         />
       )}
     </>
