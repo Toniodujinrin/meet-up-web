@@ -9,16 +9,16 @@ import axios from "axios";
 import NotificationToast from "../components/notificationToast";
 
 //production server
-// const URL = "https://meetup-server.top/";
+const URL = "https://meetup-server.top/";
 
 //development server
-const URL = "http://localhost:3003/";
+// const URL = "http://localhost:3003/";
 
 export const SocketContext = createContext();
 const sock = io(URL, {
   autoConnect: false,
-  //withCredentials: true,
-  //secure: true,
+  withCredentials: true,
+  secure: true,
 });
 
 const SocketContextProvider = ({ children }) => {
