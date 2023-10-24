@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
-  console.log(conversationDetails);
   return (
     <div className="flex flex-col w-full justify-between h-screen ">
       <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col items-center w-full">

@@ -8,15 +8,17 @@ import { useQueryClient } from "react-query";
 import axios from "axios";
 import NotificationToast from "../components/notificationToast";
 
-const URL = "https://meetup-server.top/";
+//production server
+// const URL = "https://meetup-server.top/";
 
-//  const URL = "https://localhost:3004/"
+//development server
+const URL = "http://localhost:3003/";
 
 export const SocketContext = createContext();
 const sock = io(URL, {
   autoConnect: false,
-  withCredentials: true,
-  secure: true,
+  //withCredentials: true,
+  //secure: true,
 });
 
 const SocketContextProvider = ({ children }) => {

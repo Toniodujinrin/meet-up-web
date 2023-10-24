@@ -30,6 +30,7 @@ const Chat = () => {
     turnServers,
     socket,
     setNewCall,
+    leaveConversation,
   } = useContext(SocketContext);
   const [callAccepted, setCallAccepted] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
@@ -93,10 +94,23 @@ const Chat = () => {
     return selfStream;
   };
 
+  const handleCleanUp = (stream, peer) => {
+    toast("Call Ended", { icon: "☎️" });
+    peer.destroy();
+    setIncomingCall(false);
+    setNewCall(null);
+    setCallAccepted(false);
+    stream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+    socket.off("call_response");
+    leaveConversation();
+    navigate("/main");
+  };
+
   const makeCall = async () => {
     try {
       const stream = await initiateMedia();
-      console.log(stream);
       const peer = new SimplePeer({
         initiator: true,
         trickle: false,
@@ -109,8 +123,10 @@ const Chat = () => {
 
       peer.on("signal", (data) => {
         const offer = { conversationId: id, offer: data };
-        console.log("sending offer", offer);
         socket.emit("call", offer);
+        socket.on("call_rejected", () => {
+          handleCleanUp(stream, peer);
+        });
       });
 
       peer.on("stream", (remoteStream) => {
@@ -120,7 +136,6 @@ const Chat = () => {
       });
 
       socket.on("call_response", (args) => {
-        console.log("setting remote descriptor", args);
         peer.signal(args);
       });
       peer.on("connect", () => {
@@ -128,29 +143,11 @@ const Chat = () => {
       });
 
       peer.on("error", (e) => {
-        toast("Call Ended", { icon: "☎️" });
-        peer.destroy();
-        setIncomingCall(false);
-        setNewCall(null);
-        setCallAccepted(false);
-        stream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-        socket.off("call_response");
-        navigate("/main");
+        handleCleanUp(stream, peer);
       });
 
       peer.on("close", () => {
-        toast("Call Ended", { icon: "☎️" });
-        peer.destroy();
-        setIncomingCall(false);
-        setNewCall(null);
-        setCallAccepted(false);
-        stream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-        socket.off("call_response");
-        navigate("/main");
+        handleCleanUp(stream, peer);
       });
     } catch (error) {
       toast.error("could not initiate call");
@@ -187,32 +184,25 @@ const Chat = () => {
         console.log("peer connected");
       });
       peer.on("error", (e) => {
-        toast("Call Ended", { icon: "☎️" });
-        peer.destroy();
-        stream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-        setIncomingCall(false);
-        setNewCall(null);
-        setCallAccepted(false);
-        socket.off("call_response");
-        navigate("/main");
+        handleCleanUp(stream, peer);
       });
 
       peer.on("close", () => {
-        toast("Call Ended", { icon: "☎️" });
-        stream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-        socket.off("call_response");
-        peer.destroy();
-        setIncomingCall(false);
-        setNewCall(null);
-        setCallAccepted(false);
-        navigate("/main");
+        handleCleanUp(stream, peer);
       });
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const rejectCall = () => {
+    if (call) {
+      socket.emit("call_rejected", { conversationId: call.conversationId });
+      setNewCall(null);
+      setIncomingCall(false);
+      setCallAccepted(false);
+      leaveConversation();
+      navigate("/main");
     }
   };
 
@@ -226,6 +216,18 @@ const Chat = () => {
       _stream.getTracks().forEach(function (track) {
         track.stop();
       });
+      leaveConversation();
+      navigate("/main");
+    } else {
+      setIncomingCall(false);
+      setNewCall(null);
+      setCallAccepted(false);
+      if (_stream) {
+        _stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+      leaveConversation();
       navigate("/main");
     }
   };
@@ -239,7 +241,9 @@ const Chat = () => {
           </h1>
           <div className="flex items-center justify-between w-full">
             <button
-              onClick={() => {}}
+              onClick={() => {
+                rejectCall();
+              }}
               className=" bg-red-600 rounded-full w-[50px] aspect-square flex items-center justify-center"
             >
               <img
