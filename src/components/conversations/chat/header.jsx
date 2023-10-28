@@ -57,7 +57,7 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
       <div className="flex flex-row gap-4 ">
         <img
           className={"w-[25px] cursor-pointer"}
-          src="../phoneIcon.svg"
+          src="../phoneIconWhite.svg"
           alt=""
         />
         <img

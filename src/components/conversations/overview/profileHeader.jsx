@@ -22,7 +22,7 @@ const ProfileHeader = ({
           image={user.profilePic ? user.profilePic.url : "../userIcon.svg"}
         />
         <div>
-          <p className="text-white">{user.username}</p>
+          <p className="text-white font-bold">{user.username}</p>
           <small className="text-mainGray">My Account</small>
         </div>
       </div>

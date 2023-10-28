@@ -22,7 +22,7 @@ const OnlineUsers = () => {
               image={user.profilePic ? user.profilePic.url : "../userIcon.svg"}
               type={"online"}
             />
-            <p className=" text-mainGray">{user.username}</p>
+            <p className=" text-white">{user.username}</p>
           </div>
         ))}
       </div>

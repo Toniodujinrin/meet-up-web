@@ -9,7 +9,7 @@ const Contact = ({ username, image, _id, selected, select }) => {
     >
       <div
         className={`w-[20px] h-[20px] ${
-          selected.includes(_id) && "bg-tekhelet"
+          selected.includes(_id) && "bg-tekhelet border-0"
         }  border-mainGray border-2 rounded-full`}
       ></div>
       <ProfilePic image={image} />

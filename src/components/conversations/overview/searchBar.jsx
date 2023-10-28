@@ -7,7 +7,7 @@ const SearchBar = ({ value, setValue, placeholder, handleSearch }) => {
       <input
         type="text"
         placeholder={placeholder}
-        className="w-full bg-transparent focus:outline-none text-white placeholder:text-mainGray"
+        className="w-full bg-transparent focus:outline-none text-white placeholder:text-white"
         value={value}
         onChange={(e) => setValue(e.currentTarget.value)}
         onKeyDown={(e) => {

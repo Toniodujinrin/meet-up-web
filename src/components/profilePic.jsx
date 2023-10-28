@@ -9,8 +9,8 @@ const ProfilePic = ({ image, type }) => {
 
       <div
         className={`w-[50px] ${
-          image.includes("svg") && `p-2`
-        } bg-black border-2 border-mediumGray aspect-square rounded-full`}
+          image.includes("svg") && `p-2 bg-midGray`
+        }   aspect-square rounded-full`}
       >
         <img
           className={` w-full h-full ${image && `rounded-full`}`}

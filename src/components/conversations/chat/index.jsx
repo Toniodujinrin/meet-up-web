@@ -278,10 +278,14 @@ const Chat = () => {
             <motion.div
               animate={{ y: 0 }}
               initial={{ y: -20 }}
-              className="mx-auto w-fit p-2 mt-3 items-center border border-mediumGray flex flex-row gap-3 rounded-md bg-midGray"
+              className="mx-auto w-fit p-2 mt-3 items-center border border-white flex flex-row gap-3 rounded-md bg-midGray"
             >
-              <img src="../lockIcon.svg" className="w-[20px] h-[20px]" alt="" />
-              <p className="text-mainGray">End to End Encrypted</p>
+              <img
+                src="../lockIconWhite.svg"
+                className="w-[20px] h-[20px]"
+                alt=""
+              />
+              <p className="text-white">End to End Encrypted</p>
             </motion.div>
             <div
               ref={ref}
