@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
   return (
     <div className="flex flex-col w-full justify-between h-screen ">
-      <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col items-center w-full">
+      <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col justify-evenly items-center w-full">
         {remoteVideo && (
           <video
-            className="min-h-[50%] min-w-full"
+            className="h-auto w-screen"
             playsInline
             ref={remoteVideo}
             autoPlay
@@ -14,7 +14,7 @@ const CallComp = ({ conversationDetails, selfVideo, remoteVideo, endCall }) => {
         )}
 
         <video
-          className={` min-h-[50%] min-w-full`}
+          className={` h-auto w-screen`}
           playsInline
           muted
           ref={selfVideo}

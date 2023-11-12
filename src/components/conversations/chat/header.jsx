@@ -55,20 +55,24 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
       </div>
 
       <div className="flex flex-row gap-4 ">
-        <img
-          className={"w-[25px] cursor-pointer"}
-          src="../phoneIconWhite.svg"
-          alt=""
-        />
-        <img
-          onClick={() => {
-            makeCall();
-            setCurrentDisplay("call");
-          }}
-          className={"w-[25px] cursor-pointer"}
-          src="../videoIcon.svg"
-          alt=""
-        />
+        {conversationDetails.type == "single" && (
+          <>
+            <img
+              className={"w-[25px] cursor-pointer"}
+              src="../phoneIconWhite.svg"
+              alt=""
+            />
+            <img
+              onClick={() => {
+                makeCall();
+                setCurrentDisplay("call");
+              }}
+              className={"w-[25px] cursor-pointer"}
+              src="../videoIcon.svg"
+              alt=""
+            />
+          </>
+        )}
         <img
           onClick={() => setCurrentDisplay("info")}
           className={"w-[25px] cursor-pointer"}
