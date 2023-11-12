@@ -15,6 +15,7 @@ import Add from "./detailsComponents/add";
 import { motion } from "framer-motion";
 import CallComp from "./call";
 import { toast } from "react-hot-toast";
+import CallNotification from "./callNotification";
 
 const Chat = () => {
   const ref = useRef();
@@ -272,41 +273,14 @@ const Chat = () => {
   return (
     <div className={`${incomingCall && `flex items-center justify-center`}`}>
       {incomingCall && (
-        <div className="w-[300px] h-fit  absolute p-4  flex flex-col items-center  bg-midGray rounded-lg">
-          <h1 className="text-white text-[28px] mb-4 font-semibold">
-            Incoming Call{" "}
-          </h1>
-          <div className="flex items-center justify-between w-full">
-            <button
-              onClick={() => {
-                rejectCall();
-              }}
-              className=" bg-red-600 rounded-full w-[50px] aspect-square flex items-center justify-center"
-            >
-              <img
-                src="../endCallIcon.svg"
-                className="w-[30px] h-[40px]"
-                alt=""
-              />
-            </button>
-
-            <button
-              className=" bg-green-600 rounded-full w-[50px] flex items-center justify-center aspect-square"
-              onClick={() => {
-                answerCall(call);
-                setCallAccepted(true);
-                setIncomingCall(false);
-                setCurrentDisplay("call");
-              }}
-            >
-              <img
-                src="../phoneIconWhite.svg"
-                className="w-[30px] h-[30px]"
-                alt=""
-              />
-            </button>
-          </div>
-        </div>
+        <CallNotification
+          answerCall={answerCall}
+          setCallAccepted={setCallAccepted}
+          setIncomingCall={setIncomingCall}
+          setCurrentDisplay={setCurrentDisplay}
+          rejectCall={rejectCall}
+          call={call}
+        />
       )}
       {currentDisplay == "chat" && (
         <div className="h-screen w-full flex flex-col">

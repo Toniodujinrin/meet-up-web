@@ -88,7 +88,7 @@ const Details = ({ setWebcamShowing }) => {
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className=" self-start flex flex-col items-end"
+          className=" self-start mb-4"
         >
           <BigPhoto
             setWebcamShowing={setWebcamShowing}
@@ -164,6 +164,24 @@ const Details = ({ setWebcamShowing }) => {
             ) : (
               <p>Update</p>
             )}
+          </motion.button>
+          <motion.button
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            onClick={(e) => {
+              setWebcamShowing(true);
+            }}
+            className={`bg-midGray
+            } text-white py-2 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}
+          >
+            <img
+              className="w-[25px] aspect-square"
+              src="../camera2.svg
+            "
+              alt="camera icon"
+            />
+            <p>Change Photo</p>
           </motion.button>
           <motion.div
             initial={{ y: -30, opacity: 0 }}

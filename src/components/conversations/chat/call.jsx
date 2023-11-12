@@ -14,6 +14,8 @@ const CallComp = ({
     <div className="flex flex-col w-full justify-between h-screen ">
       <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col justify-evenly items-center w-full">
         {remoteVideo && (
+          // remoteVideo.current &&
+          // remoteVideo.current.srcObject &&
           <video
             className="h-full w-screen"
             playsInline
@@ -48,6 +50,7 @@ const CallComp = ({
         <button
           onClick={() => {
             toggleVideo();
+            console.log(remoteVideo, selfVideo);
           }}
           className=" bg-mainGray rounded-full w-[50px] aspect-square flex items-center justify-center"
         >

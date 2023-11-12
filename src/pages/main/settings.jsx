@@ -3,7 +3,7 @@ import Overview from "../../components/conversations/overview";
 import { UserContext } from "../../contexts/UserContext";
 import { useQueries } from "react-query";
 import LoadingPage from "../../components/loadingPage";
-import SettingsComp from "../../components/settings/indexx";
+import SettingsComp from "../../components/settings";
 
 const Settings = () => {
   const { getSelf, getConversations } = useContext(UserContext);
