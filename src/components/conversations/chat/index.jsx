@@ -43,6 +43,8 @@ const Chat = () => {
   const { id } = useParams();
   const remoteVideo = useRef();
   const selfVideo = useRef();
+  const [videoEnabled, setVideoEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(true);
 
   useEffect(() => {
     if (call && call.offer && !callAccepted) {
@@ -142,7 +144,7 @@ const Chat = () => {
         console.log("peer connected");
       });
 
-      peer.on("error", (e) => {
+      peer.on("error", () => {
         handleCleanUp(stream, peer);
       });
 
@@ -203,6 +205,41 @@ const Chat = () => {
       setCallAccepted(false);
       leaveConversation();
       navigate("/main");
+    }
+  };
+
+  const toggleVideo = () => {
+    if (_stream) {
+      const videoTrack = _stream
+        .getTracks()
+        .find((track) => track.kind === "video");
+
+      if (videoTrack) {
+        if (videoTrack.enabled) {
+          videoTrack.enabled = false;
+          setVideoEnabled(false);
+        } else {
+          videoTrack.enabled = true;
+          setVideoEnabled(true);
+        }
+      }
+    }
+  };
+
+  const toggleAudio = () => {
+    if (_stream) {
+      const audioTrack = _stream
+        .getTracks()
+        .find((track) => track.kind === "audio");
+      if (audioTrack) {
+        if (audioTrack.enabled) {
+          audioTrack.enabled = false;
+          setAudioEnabled(false);
+        } else {
+          audioTrack.enabled = true;
+          setAudioEnabled(true);
+        }
+      }
     }
   };
 
@@ -333,6 +370,10 @@ const Chat = () => {
           selfVideo={selfVideo}
           remoteVideo={remoteVideo}
           endCall={endCall}
+          videoEnabled={videoEnabled}
+          toggleVideo={toggleVideo}
+          toggleAudio={toggleAudio}
+          audioEnabled={audioEnabled}
         />
       )}
     </div>
