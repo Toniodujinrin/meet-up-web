@@ -7,7 +7,7 @@ module.exports = {
         mainGray: "#7a7c80",
         mediumGray: "#303030",
         midGray: "#191919",
-        darkGray: "#090909",
+        darkGray: "#101010",
         tekhelet: "#6140c2",
       },
     },
