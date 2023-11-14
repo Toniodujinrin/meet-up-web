@@ -17,15 +17,15 @@ const Main = () => {
       {q1.isLoading || q2.isLoading ? (
         <LoadingPage />
       ) : q1.isError || q2.isError ? (
-        <div className="w-screen h-screen bg-black"></div>
+        <div className="w-screen h-screen bg-darkGray"></div>
       ) : (
-        <div className="flex w-screen min-h-screen bg-black justify-between">
-          <div className="lg:w-[40%] w-full bg-black border-r border-mediumGray ">
+        <div className="flex w-screen min-h-screen bg-darkGray justify-between">
+          <div className="lg:w-[40%] w-full bg-darkGray border-r border-mediumGray ">
             <Overview />
           </div>
           <div
             id="main-paper"
-            className="lg:w-[60%] lg:flex hidden bg-repeat bg-black  "
+            className="lg:w-[60%] lg:flex hidden bg-repeat bg-darkGray  "
           ></div>
         </div>
       )}

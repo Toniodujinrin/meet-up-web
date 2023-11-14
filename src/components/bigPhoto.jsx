@@ -3,9 +3,11 @@ const BigPhoto = ({ profilePic, setWebcamShowing, changeImage = true }) => {
   return (
     <>
       <div
-        className={`lg:w-[300px] w-[200px]  bg-black border-4 border-midGray aspect-square rounded-full`}
+        className={`lg:w-[300px] w-[200px] ${
+          profilePic.includes(".svg") && `p-3`
+        }  bg-black flex items-center justify-center border-4 border-midGray aspect-square overflow-hidden rounded-full`}
       >
-        <img className={`w-full h-full rounded-full`} src={profilePic} alt="" />
+        <img className={`w-full aspect-square `} src={profilePic} alt="" />
       </div>
       {/* {changeImage && (
         <div
