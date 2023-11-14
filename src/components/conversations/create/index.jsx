@@ -49,7 +49,7 @@ const Create = () => {
               navigate("/contacts");
             }}
             disabled={false}
-            text={"Add Contacts"}
+            text={"Add "}
           />
           <ButtonMain
             onClick={handleCreate}

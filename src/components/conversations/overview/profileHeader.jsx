@@ -1,5 +1,6 @@
 import React from "react";
 import ProfilePic from "../../profilePic";
+
 import { useContext } from "react";
 import { UserContext } from "../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ const ProfileHeader = ({
   dropDownShowing,
   dropDownToggleRef,
 }) => {
-  const { user } = useContext(UserContext);
+  const { user, pendingReceived } = useContext(UserContext);
   const navigate = useNavigate();
 
   return (
@@ -27,7 +28,15 @@ const ProfileHeader = ({
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-row items-center ">
+        <div
+          onClick={() => navigate("/contacts")}
+          className={`bg-tekhelet text-white font-bold w-[25px] h-[20px] flex items-center justify-center  rounded-full ${
+            !pendingReceived.length && `hidden`
+          }`}
+        >
+          <p>{pendingReceived.length}</p>
+        </div>
         <img
           ref={dropDownToggleRef}
           onClick={() => setDrowpDownShowing(!dropDownShowing)}

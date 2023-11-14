@@ -6,17 +6,19 @@ import LoadingPage from "../../components/loadingPage";
 import Call from "../../components/conversations/call";
 
 const Main = () => {
-  const { getSelf, getConversations, getContacts } = useContext(UserContext);
-  const [q1, q2] = useQueries([
+  const { getSelf, getConversations, getContacts, getPendingReceived } =
+    useContext(UserContext);
+  const [q1, q2, q3, q4] = useQueries([
     { queryKey: ["user"], queryFn: getSelf },
     { queryKey: ["conversations"], queryFn: getConversations },
     { queryKey: ["contacts"], queryFn: getContacts },
+    { queryKey: ["pendingReceived"], queryFn: getPendingReceived },
   ]);
   return (
     <>
-      {q1.isLoading || q2.isLoading ? (
+      {q1.isLoading || q2.isLoading || q3.isLoading || q4.isLoading ? (
         <LoadingPage />
-      ) : q1.isError || q2.isError ? (
+      ) : q1.isError || q2.isError || q1.isError || q2.isError ? (
         <div className="w-screen h-screen bg-darkGray"></div>
       ) : (
         <div className="flex w-screen min-h-screen bg-darkGray justify-between">

@@ -1,15 +1,20 @@
 import React from "react";
 import Conversation from "./conversation";
 import { useNavigate } from "react-router-dom";
-import ButtonMain from "../../buttonMain";
+
 const Conversations = ({ searchResults }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full  ">
+    <div className="w-full bg-darkGray">
       <div className="w-full flex p-4 flex-row justify-between items-center">
         <h1 className="text-[21px]  text-white">Conversations</h1>
-        <ButtonMain onClick={() => navigate("/create")} text={"New"} />
+        <button
+          onClick={() => navigate("/create")}
+          className="rounded-[30px] bg-tekhelet h-[40px] w-[50px] flex items-center justify-center"
+        >
+          <img className="w-[30px] h-[30px]" src="../penIcon.svg" alt="" />
+        </button>
       </div>
       <div className="w-full overflow-y-scroll">
         {searchResults.map((conversation) => (
