@@ -15,14 +15,14 @@ const InputBox = ({
         onChange={(e) => setValue(e.currentTarget.value)}
         type="text"
         placeholder="New message..."
-        className=" placeholder:text-white resize-none text-white focus:outline-none rounded-xl p-3 w-[70%] h-[50px] bg-mediumGray"
+        className=" placeholder:text-white resize-none text-white focus:outline-none rounded-[25px] p-3 w-[70%] h-[50px] bg-mediumGray"
       />
       <button
-        className=""
+        className="h-[50px] bg-tekhelet rounded-full aspect-square flex items-center justify-center"
         disabled={value.length == 0}
         onClick={() => handleSendMessage()}
       >
-        <img src="../sendIcon.svg" className="w-[30px] aspect-square" alt="" />
+        <img src="../sendIcon.svg" className="w-[45px] aspect-square" alt="" />
       </button>
     </div>
   );

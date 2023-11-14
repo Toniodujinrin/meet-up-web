@@ -28,7 +28,7 @@ const Conversation = () => {
       ) : q1.isError || q2.isError ? (
         <div className="w-screen h-screen bg-black"></div>
       ) : (
-        <div className="flex w-screen min-h-screen bg-black justify-between">
+        <div className="flex w-screen min-h-screen bg-darkGray justify-between">
           <div className="lg:w-[40%] lg:flex hidden  w-full border-r border-mediumGray ">
             <Overview />
           </div>
