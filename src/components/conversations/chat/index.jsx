@@ -99,7 +99,7 @@ const Chat = () => {
 
   const handleCleanUp = (stream, peer, type = "error") => {
     if (type !== "error") {
-      toast(`Call Ended ${type}`, { icon: "☎️" });
+      toast(`Call Ended`, { icon: "☎️" });
     }
     peer.destroy();
     setIncomingCall(false);
@@ -130,6 +130,7 @@ const Chat = () => {
         const offer = { conversationId: id, offer: data };
         socket.emit("call", offer);
         socket.on("call_rejected", () => {
+          socket.off("call_rejected");
           handleCleanUp(stream, peer);
         });
       });
@@ -146,6 +147,7 @@ const Chat = () => {
           track.stop();
         });
         navigate("/main", { replace: true });
+        socket.off("offerSignalError");
       });
 
       socket.on("signaling_error", () => {

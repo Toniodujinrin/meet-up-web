@@ -12,7 +12,7 @@ const CallComp = ({
 }) => {
   return (
     <div className="flex flex-col w-full justify-between h-screen ">
-      <div className="h-[calc(100%-70px)]  overflow-hidden flex flex-col items-center w-full">
+      <div className="h-[calc(100%-70px)]  overflow-hidden flex flex-col justify-end items-center w-full">
         {remoteVideo && (
           // remoteVideo.current &&
           // remoteVideo.current.srcObject &&
@@ -27,7 +27,7 @@ const CallComp = ({
         )}
 
         <video
-          className={` w-[200px] mt-4 mr-4 object-cover flex self-end absolute rounded-[25px] h-[300px]`}
+          className={` w-[150px] mb-4 mr-4 object-cover flex self-end  absolute rounded-[25px] h-[250px]`}
           playsInline
           muted
           ref={selfVideo}

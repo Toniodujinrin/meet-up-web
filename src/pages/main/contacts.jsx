@@ -32,7 +32,7 @@ const Contacts = () => {
         <div className="w-screen h-screen bg-black"></div>
       ) : (
         <div className="flex w-screen min-h-screen bg-black justify-between">
-          <div className="lg:w-[40%] lg:flex hidden  w-full border-r border-mediumGray ">
+          <div className="lg:w-[40%] lg:flex hidden bg-darkGray  w-full border-r border-mediumGray ">
             <Overview />
           </div>
           <div className="lg:w-[60%] w-full h-full">
