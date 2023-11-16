@@ -2,7 +2,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 const client = axios.create({
-  // baseURL:"http://localhost:3003/api"
+  //baseURL: "http://localhost:3003/api",
   baseURL: "https://meetup-server.top/api",
 });
 

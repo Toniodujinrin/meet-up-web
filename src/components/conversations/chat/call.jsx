@@ -12,26 +12,27 @@ const CallComp = ({
 }) => {
   return (
     <div className="flex flex-col w-full justify-between h-screen ">
-      <div className="h-[calc(100%-70px)] overflow-hidden flex flex-col justify-evenly items-center w-full">
+      <div className="h-[calc(100%-70px)]  overflow-hidden flex flex-col items-center w-full">
         {remoteVideo && (
           // remoteVideo.current &&
           // remoteVideo.current.srcObject &&
-          <video
-            className="h-full w-screen"
-            playsInline
-            ref={remoteVideo}
-            autoPlay
-          />
+          <div className="h-screen">
+            <video
+              className="h-full object-cover  w-screen"
+              playsInline
+              ref={remoteVideo}
+              autoPlay
+            />
+          </div>
         )}
-        <div className="w-[100px] rounded-lg h-[100px]">
-          <video
-            className={` h-auto w-screen`}
-            playsInline
-            muted
-            ref={selfVideo}
-            autoPlay
-          />
-        </div>
+
+        <video
+          className={` w-[200px] mt-4 mr-4 object-cover flex self-end absolute rounded-[25px] h-[300px]`}
+          playsInline
+          muted
+          ref={selfVideo}
+          autoPlay
+        />
       </div>
 
       <div className="w-full h-[70px] bg-midGray flex flex-row gap-4 items-center justify-center">
@@ -39,7 +40,7 @@ const CallComp = ({
           onClick={() => {
             toggleAudio();
           }}
-          className=" bg-mainGray rounded-full w-[50px] aspect-square flex items-center justify-center"
+          className=" bg-mediumGray rounded-full w-[50px] aspect-square flex items-center justify-center"
         >
           <img
             src={audioEnabled ? "../phoneIconWhite.svg" : "../mutedIcon.svg"}
@@ -52,7 +53,7 @@ const CallComp = ({
             toggleVideo();
             console.log(remoteVideo, selfVideo);
           }}
-          className=" bg-mainGray rounded-full w-[50px] aspect-square flex items-center justify-center"
+          className=" bg-mediumGray rounded-full w-[50px] aspect-square flex items-center justify-center"
         >
           <img
             src={videoEnabled ? "../videoIcon.svg" : "../disabledVideoIcon.svg"}

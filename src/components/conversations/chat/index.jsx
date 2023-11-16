@@ -97,8 +97,10 @@ const Chat = () => {
     return selfStream;
   };
 
-  const handleCleanUp = (stream, peer) => {
-    toast("Call Ended", { icon: "☎️" });
+  const handleCleanUp = (stream, peer, type = "error") => {
+    if (type !== "error") {
+      toast(`Call Ended ${type}`, { icon: "☎️" });
+    }
     peer.destroy();
     setIncomingCall(false);
     setNewCall(null);
@@ -138,6 +140,19 @@ const Chat = () => {
         }
       });
 
+      socket.on("offerSignalError", () => {
+        toast.error("receiver unavailable");
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+        navigate("/main", { replace: true });
+      });
+
+      socket.on("signaling_error", () => {
+        toast.error("something went wrong");
+        navigate("/main", { replace: true });
+      });
+
       socket.on("call_response", (args) => {
         peer.signal(args);
       });
@@ -150,7 +165,7 @@ const Chat = () => {
       });
 
       peer.on("close", () => {
-        handleCleanUp(stream, peer);
+        handleCleanUp(stream, peer, "close");
       });
     } catch (error) {
       toast.error("could not initiate call");
@@ -190,8 +205,13 @@ const Chat = () => {
         handleCleanUp(stream, peer);
       });
 
+      socket.on("signaling_error", () => {
+        toast.error("something went wrong");
+        navigate("/main", { replace: true });
+      });
+
       peer.on("close", () => {
-        handleCleanUp(stream, peer);
+        handleCleanUp(stream, peer, "close");
       });
     } catch (error) {
       console.log(error);

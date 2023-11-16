@@ -12,7 +12,7 @@ import NotificationToast from "../components/notificationToast";
 const URL = "https://meetup-server.top/";
 
 //development server
-// const URL = "http://localhost:3003/";
+//const URL = "http://localhost:3003/";
 
 export const SocketContext = createContext();
 const sock = io(URL, {
@@ -65,14 +65,6 @@ const SocketContextProvider = ({ children }) => {
     });
 
     //error handling
-    sock.on("offerSignalError", (e) => {
-      toast.error("receiver unavailable");
-      navigate("/main", { replace: true });
-    });
-    sock.on("signaling_error", (e) => {
-      toast.error("something went wrong during call process");
-      navigate("/main", { replace: true });
-    });
     sock.on("conn_error", () => {
       toast.error("could not connect to conversation");
       navigate("/main", { replace: true });
