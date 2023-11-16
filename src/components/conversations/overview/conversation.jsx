@@ -10,7 +10,7 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
   const { notifications } = useContext(SocketContext);
   const [amount, setAmount] = useState(0);
   const user = JSON.parse(window.localStorage.getItem("user"));
-
+  console.log(lastMessage);
   useEffect(() => {
     const notification = notifications.find(
       (notification) => notification.conversationId == _id
@@ -30,14 +30,48 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
       <div className="flex items-center gap-4">
         <ProfilePic image={image} />
         <div>
-          <h2 className="text-white">{name}</h2>
+          <h2 className="text-white text-[20px]">{name}</h2>
+          {/* code for underlying text conversation overview */}
           <small className="text-mainGray">
-            {lastMessage &&
-              `Last message by ${
-                user && user._id == lastMessage.senderId
-                  ? "you"
-                  : lastMessage.senderId
-              }`}
+            {lastMessage && user && (
+              <div>
+                {user._id == lastMessage.senderId ? (
+                  <div className="flex flex-row items-center gap-2">
+                    <img
+                      className="w-[20px] aspect-square"
+                      src={`${
+                        lastMessage.status == "delivered"
+                          ? `../sendIconPurple.svg`
+                          : `../sendIconOutlinedPurple.svg`
+                      }`}
+                      alt=""
+                    />
+                    <p className="text-[16px]">
+                      {lastMessage.status == "delivered"
+                        ? "deleivered"
+                        : "received"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-row items-center gap-2">
+                    <img
+                      className="w-[20px] aspect-square"
+                      src={`${
+                        lastMessage.status == "delivered"
+                          ? `../newMessageIcon.svg`
+                          : `../readMessageIcon.svg`
+                      }`}
+                      alt=""
+                    />
+                    <p className="text-[16px]">
+                      {lastMessage.status == "delivered"
+                        ? "new Message"
+                        : "opened"}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </small>
         </div>
       </div>
