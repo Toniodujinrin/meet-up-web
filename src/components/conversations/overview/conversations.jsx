@@ -11,9 +11,9 @@ const Conversations = ({ searchResults }) => {
         <h1 className="text-[21px]  text-white">Conversations</h1>
         <button
           onClick={() => navigate("/create")}
-          className="rounded-[30px] bg-tekhelet h-[40px] w-[50px] flex items-center justify-center"
+          className="rounded-full bg-tekhelet  w-[40px] aspect-square flex items-center justify-center"
         >
-          <img className="w-[30px] h-[30px]" src="../penIcon.svg" alt="" />
+          <img className="w-[25px] h-[25px]" src="../penIcon.svg" alt="" />
         </button>
       </div>
       <div className="w-full overflow-y-scroll">

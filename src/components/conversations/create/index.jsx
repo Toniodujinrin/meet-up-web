@@ -41,23 +41,31 @@ const Create = () => {
       <div className="flex flex-row justify-between mb-4">
         <div className="flex gap-3 items-center">
           <BackArrow />
-          <h1 className="text-white font-semibold text-[32px]">New</h1>
+          <h1 className="text-white font-semibold text-[26px]">New</h1>
         </div>
         <div className="gap-3 flex flex-row items-center">
-          <ButtonMain
+          <button
+            className="w-[40px] aspect-square flex items-center justify-center bg-tekhelet rounded-full"
             onClick={() => {
               navigate("/contacts");
             }}
-            disabled={false}
-            text={"Add "}
-          />
-          <ButtonMain
-            onClick={handleCreate}
-            disabled={
-              selected.length == 0 || (selected.length > 1 && name.length === 0)
-            }
-            text={"Create"}
-          />
+          >
+            <img
+              className="w-[25px] h-[25px]"
+              src="../addUserIcon.svg"
+              alt=""
+            />
+          </button>
+          {selected.length !== 0 && (
+            <ButtonMain
+              onClick={handleCreate}
+              disabled={
+                selected.length == 0 ||
+                (selected.length > 1 && name.length === 0)
+              }
+              text={"Create"}
+            />
+          )}
         </div>
       </div>
       {selected.length > 1 && (

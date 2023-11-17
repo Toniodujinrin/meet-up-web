@@ -9,7 +9,7 @@ const SettingsComp = () => {
     <div className="p-4 h-full flex flex-col ">
       <div className="flex flex-row gap-3 items-center">
         <BackArrow />
-        <h1 className="text-white text-[32px]">Settings</h1>
+        <h1 className="text-white text-[26px]">Settings</h1>
       </div>
 
       {webcamShowing ? (

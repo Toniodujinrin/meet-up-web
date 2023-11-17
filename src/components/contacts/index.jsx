@@ -31,7 +31,7 @@ const ContactsComp = () => {
 
   return (
     <div className="w-full h-full p-4">
-      <div className="w-full flex flex-row items-center justify-between">
+      <div className="w-full flex flex-row items-start justify-between">
         {currentPage === "add" ? (
           <div className=" flex flex-row gap-2 items-center">
             <img
@@ -43,13 +43,13 @@ const ContactsComp = () => {
               className="w-[25px] h-[25px] rotate-180"
               alt=""
             />
-            <div className="text-white text-[36px]">Add Users</div>
+            <div className="text-white text-[26px]">Add Users</div>
           </div>
         ) : (
           <>
-            <div className="text-white text-[36px] mb-4 flex flex-row items-center gap-4">
+            <div className="text-white text-[26px] mb-4 flex flex-row items-center gap-4">
               <BackArrow />
-              <div>Contacts</div>
+              <p>Contacts</p>
               <img
                 ref={dropDownToggleRef}
                 onClick={() => setDropDownShowing(!dropDownShowing)}
@@ -60,13 +60,19 @@ const ContactsComp = () => {
                 alt=""
               />
             </div>
-            <ButtonMain
+            <button
+              className="w-[40px] aspect-square flex items-center justify-center bg-tekhelet rounded-full"
               onClick={() => {
                 setCurrentPage("add");
                 setDropDownShowing(false);
               }}
-              text={"Add"}
-            />
+            >
+              <img
+                className="w-[25px] h-[25px]"
+                src="../addUserIcon.svg"
+                alt=""
+              />
+            </button>
           </>
         )}
       </div>
