@@ -50,7 +50,7 @@ const Overview = () => {
   });
 
   return (
-    <div className="flex w-full h-screen   flex-col items-end">
+    <div className="flex w-full h-screen flex-col items-end">
       <ProfileHeader
         dropDownToggleRef={dropDownToggleRef}
         setDrowpDownShowing={setDrowpDownShowing}

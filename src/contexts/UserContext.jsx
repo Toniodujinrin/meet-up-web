@@ -88,7 +88,9 @@ const UserContextProvider = ({ children }) => {
   const searchUsers = async (searchString) => {
     try {
       setUserSearchLoading(true);
-      const { data } = await get(`users/searchUser/${searchString}`);
+      const { data } = await get(
+        `users/searchUser/${searchString.toLowerCase()}`
+      );
       setSearchedUsers(data);
     } catch (error) {
       toast.error("could not perform search");

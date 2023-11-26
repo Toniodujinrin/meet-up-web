@@ -23,7 +23,7 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
       />
       {deleteAction == "leave" && (
         <h1 className="text-white text-[21px] my-8 text-center">
-          Are you sure you want to leave this conversation, you will not be able
+          Are you sure you want to leave this conversation, you wiNll not be able
           to enter join again untill someone adds you back
         </h1>
       )}
