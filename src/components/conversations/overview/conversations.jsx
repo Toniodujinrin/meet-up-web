@@ -16,7 +16,7 @@ const Conversations = ({ searchResults }) => {
           <img className="w-[25px] h-[25px]" src="../penIcon.svg" alt="" />
         </button>
       </div>
-      <div className="w-full overflow-y-scroll">
+      <div className="w-full ">
         {searchResults.map((conversation) => (
           <Conversation
             _id={conversation._id}

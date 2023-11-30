@@ -36,7 +36,7 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
               : "../groupIcon.svg"
           }
         />
-        <div>
+        <div onClick={() => setCurrentDisplay("info")}>
           <p className="text-white font-semibold">{conversationDetails.name}</p>
           {conversationDetails.type == "single" ? (
             <small
@@ -57,11 +57,6 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
       <div className="flex flex-row gap-4 ">
         {conversationDetails.type == "single" && (
           <>
-            <img
-              className={"w-[25px] cursor-pointer"}
-              src="../phoneIconWhite.svg"
-              alt=""
-            />
             <img
               onClick={() => {
                 makeCall();

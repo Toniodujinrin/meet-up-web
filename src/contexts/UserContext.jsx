@@ -40,6 +40,7 @@ const UserContextProvider = ({ children }) => {
       else {
         connect();
         navigate("/main", { replace: true });
+        toast.success("Welcome");
       }
     } catch (error) {
       if (error.response && error.response.data)

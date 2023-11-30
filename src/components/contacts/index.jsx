@@ -49,7 +49,11 @@ const ContactsComp = () => {
           <>
             <div className="text-white text-[26px] mb-4 flex flex-row items-center gap-4">
               <BackArrow />
-              <p>Contacts</p>
+              {currentPage === "current" && <p>Contacts</p>}
+
+              {currentPage === "pending" && <p>Pending</p>}
+
+              {currentPage === "requests" && <p>Requests</p>}
               <img
                 ref={dropDownToggleRef}
                 onClick={() => setDropDownShowing(!dropDownShowing)}

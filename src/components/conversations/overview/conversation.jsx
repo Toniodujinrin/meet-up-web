@@ -25,7 +25,7 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
         location.pathname != `/conversation/${_id}` &&
           navigate(`/conversation/${_id}`, { replace: true });
       }}
-      className="w-full  p-4 cursor-pointer border-b  border-mediumGray gap-4 flex flex-row  items-center justify-between h-[100px]"
+      className="w-full  px-4 cursor-pointer border-b  border-mediumGray gap-4 flex flex-row  items-center justify-between h-[80px]"
     >
       <div className="flex items-center gap-4">
         <ProfilePic image={image} />
