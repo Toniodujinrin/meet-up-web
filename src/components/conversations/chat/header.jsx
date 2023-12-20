@@ -61,7 +61,7 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
                 setCurrentDisplay("call");
               }}
               className={"w-[25px] cursor-pointer"}
-              src="../videoIcon.svg"
+              src="../../videoIcon.svg"
               alt=""
             />
           </>
@@ -69,7 +69,7 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
         <img
           onClick={() => setCurrentDisplay("info")}
           className={"w-[25px] cursor-pointer"}
-          src="../menuIcon.svg"
+          src="../../menuIcon.svg"
           alt=""
         />
       </div>
