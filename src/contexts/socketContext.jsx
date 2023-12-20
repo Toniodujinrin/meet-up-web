@@ -67,7 +67,7 @@ const SocketContextProvider = ({ children }) => {
     sock.on("call", (args) => {
       if (!call && args.conversationId && args.offer) {
         setNewCall(args);
-        navigate(`/conversation/${args.conversationId}`);
+        navigate(`/main/conversation/${args.conversationId}`);
       }
     });
 
