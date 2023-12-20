@@ -18,7 +18,6 @@ import SocketContextProvider from "./contexts/socketContext";
 import Contacts from "./pages/main/contacts";
 import Settings from "./pages/main/settings";
 import Home from "./pages/home";
-import Call from "./pages/main/call";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
@@ -50,7 +49,6 @@ const App = () => {
                   <SignUpContextProvider>
                     <AnimatePresence>
                       <Routes>
-                        <Route path="/create" element={<NewConversation />} />
                         <Route path="/login" element={<Login />} />
                         <Route
                           path="/verifyAccount"
@@ -58,14 +56,18 @@ const App = () => {
                         />
                         <Route path="/verifyEmail" element={<VerifyEmail />} />
                         <Route path="/signup" element={<Signup />} />
-                        <Route path="/main" element={<Main />} />
                         <Route
-                          path="/conversation/:id"
+                          path="/main/conversation/:id"
                           element={<Conversation />}
                         />
-                        <Route path="/contacts" element={<Contacts />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/call/:type/:id?" element={<Call />} />
+                        <Route
+                          path="/main/create"
+                          element={<NewConversation />}
+                        />
+                        <Route path="/main/contacts" element={<Contacts />} />
+                        <Route path="/main/settings" element={<Settings />} />
+                        <Route path="/main" element={<Main />} />
+
                         <Route path="/" element={<Home />} />
                       </Routes>
                     </AnimatePresence>

@@ -22,7 +22,11 @@ const InputBox = ({
         disabled={value.length == 0}
         onClick={() => handleSendMessage()}
       >
-        <img src="../sendIcon.svg" className="w-[35px] aspect-square" alt="" />
+        <img
+          src="../../sendIcon.svg"
+          className="w-[35px] aspect-square"
+          alt=""
+        />
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Contact from "./contact";
-import ContactWithoutSelect from "../../contacts/contacts";
+import ContactBoxWithSelect from "../../contacts/contact-box-with-select";
+import ContactWithoutSelect from "../../contacts/contact-box-without-select";
 const ContactList = ({ selected, select, contacts, shouldSelect = true }) => {
   const [contactList, setContactList] = useState([]);
 
@@ -28,35 +28,25 @@ const ContactList = ({ selected, select, contacts, shouldSelect = true }) => {
           <div className="w-full lg:grid grid-cols-3 flex flex-col  mt-4 gap-4">
             {shouldSelect
               ? alphabet.listOfContacts.map((contact) => (
-                  <Contact
+                  <ContactBoxWithSelect
                     key={contact._id}
-                    image={
-                      contact.profilePic
-                        ? contact.profilePic.url
-                        : "../userIcon.svg"
-                    }
+                    image={contact.profilePic}
+                    defaultColor={contact.defaultProfileColor}
                     username={contact.username}
                     _id={contact._id}
                     selected={selected}
                     select={select}
                   />
                 ))
-              : alphabet.listOfContacts.map(
-                  (contact) => (
-                    <ContactWithoutSelect
-                      key={contact._id}
-                      username={contact.username}
-                      image={
-                        contact.profilePic
-                          ? contact.profilePic.url
-                          : "../userIcon.svg"
-                      }
-                      _id={contact._id}
-                    />
-                  )
-
-                  // <Contact key={contact._id} image={contact.profilePic? contact.profilePic.url:"../userIcon.svg"} username={contact.username} _id = {contact._id} selected={selected} select={select}/>
-                )}
+              : alphabet.listOfContacts.map((contact) => (
+                  <ContactWithoutSelect
+                    defaultColor={contact.defaultProfileColor}
+                    key={contact._id}
+                    username={contact.username}
+                    image={contact.profilePic}
+                    _id={contact._id}
+                  />
+                ))}
           </div>
         </div>
       ))}

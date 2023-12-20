@@ -19,7 +19,9 @@ const OnlineUsers = () => {
             } flex flex-col`}
           >
             <ProfilePic
-              image={user.profilePic ? user.profilePic.url : "../userIcon.svg"}
+              image={user.profilePic}
+              defaultColor={user.defaultProfileColor}
+              displayName={user.username}
               type={"online"}
             />
             <p className=" text-white">{user.username}</p>

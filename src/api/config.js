@@ -1,9 +1,13 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 
+let baseURL = "https://meetup-server.top/api";
+if (process.env.NODE_ENV == "development") {
+  baseURL = "http://localhost:3003/api";
+}
+
 const client = axios.create({
-  //baseURL: "http://localhost:3003/api",
-  baseURL: "https://meetup-server.top/api",
+  baseURL,
 });
 
 client.interceptors.request.use((config) => {

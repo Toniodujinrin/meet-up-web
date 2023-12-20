@@ -13,7 +13,7 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
       animate={{ y: 0, opacity: 1 }}
       initial={{ y: -30, opacity: 0 }}
       exit={{ y: 30, opacity: 0 }}
-      className="w-[400px] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-midGray rounded-md"
+      className="lg:w-[400px] w-[80%] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-midGray rounded-md"
     >
       <img
         onClick={() => setDeleteShowing(false)}
@@ -23,8 +23,8 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
       />
       {deleteAction == "leave" && (
         <h1 className="text-white text-[21px] my-8 text-center">
-          Are you sure you want to leave this conversation, you wiNll not be able
-          to enter join again untill someone adds you back
+          Are you sure you want to leave this conversation, you wiNll not be
+          able to enter join again untill someone adds you back
         </h1>
       )}
       {deleteAction == "account" && (

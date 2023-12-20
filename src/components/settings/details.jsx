@@ -31,6 +31,7 @@ const Details = ({ setWebcamShowing }) => {
     delete _user.registration;
     delete _user._id;
     delete _user.profilePic;
+    delete _user.defaultProfileColor;
     const payload = { bio, firstName, lastName, phone, username };
     if (JSON.stringify(_user) == JSON.stringify(payload)) {
       setDisabled(true);
@@ -92,9 +93,9 @@ const Details = ({ setWebcamShowing }) => {
         >
           <BigPhoto
             setWebcamShowing={setWebcamShowing}
-            profilePic={
-              user.profilePic ? user.profilePic.url : "../userIcon.svg"
-            }
+            profilePic={user.profilePic}
+            defaultColor={user.defaultProfileColor}
+            displayName={user.username}
           />
         </motion.div>
 
@@ -195,6 +196,24 @@ const Details = ({ setWebcamShowing }) => {
               loading={false}
             />
           </motion.div>
+          <motion.button
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            onClick={(e) => {
+              //setWebcamShowing(true);
+            }}
+            className={`bg-midGray
+            } text-white py-2 mt-4 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}
+          >
+            <img
+              className="w-[25px] aspect-square"
+              src="../camera2.svg
+            "
+              alt="camera icon"
+            />
+            <p>Remove Photo</p>
+          </motion.button>
         </div>
       </div>
     </div>

@@ -43,7 +43,9 @@ const CallComp = ({
           className=" bg-mediumGray rounded-full w-[50px] aspect-square flex items-center justify-center"
         >
           <img
-            src={audioEnabled ? "../phoneIconWhite.svg" : "../mutedIcon.svg"}
+            src={
+              audioEnabled ? "../../phoneIconWhite.svg" : "../../mutedIcon.svg"
+            }
             className="w-[30px] h-[40px]"
             alt=""
           />
@@ -56,7 +58,11 @@ const CallComp = ({
           className=" bg-mediumGray rounded-full w-[50px] aspect-square flex items-center justify-center"
         >
           <img
-            src={videoEnabled ? "../videoIcon.svg" : "../disabledVideoIcon.svg"}
+            src={
+              videoEnabled
+                ? "../../videoIcon.svg"
+                : "../../disabledVideoIcon.svg"
+            }
             className="w-[30px] h-[40px]"
             alt=""
           />
@@ -65,7 +71,11 @@ const CallComp = ({
           onClick={() => endCall()}
           className=" bg-red-600 rounded-full w-[70px] h-[50px] flex items-center justify-center"
         >
-          <img src="../endCallIcon.svg" className="w-[30px] h-[40px]" alt="" />
+          <img
+            src="../../endCallIcon.svg"
+            className="w-[30px] h-[40px]"
+            alt=""
+          />
         </button>
       </div>
     </div>

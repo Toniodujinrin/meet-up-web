@@ -50,7 +50,7 @@ const Overview = () => {
   });
 
   return (
-    <div className="flex w-full h-screen flex-col items-end">
+    <div className="flex w-full h-screen overflow-hidden flex-col items-end">
       <ProfileHeader
         dropDownToggleRef={dropDownToggleRef}
         setDrowpDownShowing={setDrowpDownShowing}
@@ -63,7 +63,7 @@ const Overview = () => {
         >
           <li
             onClick={() => {
-              navigate("/settings");
+              navigate("/main/settings");
               setDrowpDownShowing(false);
             }}
             className=" border-b cursor-pointer flex flex-row items-center justify-between border-mainGray p-2"
@@ -71,13 +71,13 @@ const Overview = () => {
             <p>Settings</p>
             <img
               className="w-[20px] h-[20px]"
-              src="../settingsIcon.svg"
+              src="../../settingsIcon.svg"
               alt=""
             />
           </li>
           <li
             onClick={() => {
-              navigate("/contacts");
+              navigate("/main/contacts");
               setDrowpDownShowing(false);
             }}
             className="border-b border-mainGray flex flex-row items-center justify-between cursor-pointer p-2"
@@ -85,7 +85,7 @@ const Overview = () => {
             <p>Contacts</p>
             <img
               className="w-[20px] h-[20px]"
-              src="../groupIconWhite.svg"
+              src="../../groupIconWhite.svg"
               alt=""
             />
           </li>
@@ -94,7 +94,11 @@ const Overview = () => {
             className="flex flex-row items-center justify-between text-red-600 cursor-pointer p-2"
           >
             <p>Log out</p>
-            <img className="w-[20px] h-[20px]" src="../logoutIcon.svg" alt="" />
+            <img
+              className="w-[20px] h-[20px]"
+              src="../../logoutIcon.svg"
+              alt=""
+            />
           </li>
         </ul>
       )}

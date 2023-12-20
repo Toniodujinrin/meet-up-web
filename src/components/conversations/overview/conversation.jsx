@@ -4,7 +4,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { SocketContext } from "../../../contexts/socketContext";
 
-const Conversation = ({ name, image, _id, lastMessage }) => {
+const Conversation = ({
+  name,
+  image,
+  _id,
+  lastMessage,
+  defaultConversationColor,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { notifications } = useContext(SocketContext);
@@ -23,14 +29,19 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
     <div
       onClick={() => {
         location.pathname != `/conversation/${_id}` &&
-          navigate(`/conversation/${_id}`, { replace: true });
+          navigate(`/main/conversation/${_id}`, { replace: true });
       }}
       className="w-full  px-4 cursor-pointer border-b  border-mediumGray gap-4 flex flex-row  items-center justify-between h-[80px]"
     >
       <div className="flex items-center gap-4">
-        <ProfilePic image={image} />
+        <ProfilePic
+          image={image}
+          defaultColor={defaultConversationColor}
+          displayName={name}
+        />
         <div>
           <h2 className="text-white text-[18px] font-bold">{name}</h2>
+
           {/* code for underlying text conversation overview */}
           <small className="text-mainGray">
             {lastMessage && user && (
@@ -41,8 +52,8 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
                       className="w-[20px] aspect-square"
                       src={`${
                         lastMessage.status == "delivered"
-                          ? `../sendIconPurple.svg`
-                          : `../sendIconOutlinedPurple.svg`
+                          ? `../../sendIconPurple.svg`
+                          : `../../sendIconOutlinedPurple.svg`
                       }`}
                       alt=""
                     />
@@ -58,8 +69,8 @@ const Conversation = ({ name, image, _id, lastMessage }) => {
                       className="w-[18px] aspect-square"
                       src={`${
                         lastMessage.status == "delivered"
-                          ? `../newMessageIcon.svg`
-                          : `../readMessageIcon.svg`
+                          ? `../../newMessageIcon.svg`
+                          : `../../readMessageIcon.svg`
                       }`}
                       alt=""
                     />

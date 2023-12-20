@@ -8,7 +8,6 @@ import BackArrow from "../../backArrow";
 import ButtonMain from "../../buttonMain";
 import ContactList from "./contactList";
 
-
 const Create = () => {
   const navigate = useNavigate();
   const { userContacts } = useContext(UserContext);
@@ -48,7 +47,7 @@ const Create = () => {
           <button
             className="w-[40px] aspect-square flex items-center justify-center bg-tekhelet rounded-full"
             onClick={() => {
-              navigate("/contacts");
+              navigate("/main/contacts", { state: { type: "add" } });
             }}
           >
             <img
@@ -59,7 +58,6 @@ const Create = () => {
           </button>
           {selected.length !== 0 && (
             <ButtonMain
-              
               onClick={handleCreate}
               disabled={
                 selected.length == 0 ||

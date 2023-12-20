@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
-import Contact from "./contacts";
+import ContactList from "../conversations/create/contactList";
 import SearchBar from "../conversations/overview/searchBar";
 
 const PendingContactsSent = () => {
@@ -37,14 +37,12 @@ const PendingContactsSent = () => {
         placeholder={"search for a contact"}
       />
       <div className="w-full h-full lg:grid grid-cols-3 flex gap-4 flex-col items-center">
-        {searchResult.map((user) => (
-          <Contact
-            key={user._id}
-            image={user.profilePic ? user.profilePic.url : "../userIcon.svg"}
-            username={user.username}
-            _id={user._id}
-          />
-        ))}
+        <ContactList
+          select={null}
+          selected={null}
+          contacts={searchResult}
+          shouldSelect={false}
+        />
       </div>
     </div>
   );

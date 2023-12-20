@@ -3,7 +3,7 @@ import ProfilePic from "../profilePic";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
-const Contact = ({ username, image, _id }) => {
+const ContactBoxWithoutSelect = ({ username, image, _id, defaultColor }) => {
   const user = JSON.parse(window.localStorage.getItem("user"));
   const {
     pendingReceived,
@@ -24,7 +24,11 @@ const Contact = ({ username, image, _id }) => {
   return (
     <div className="bg-midGray cursor-pointer rounded-md lg:w-[300px] w-full  justify-between p-3 h-[80px] items-center flex flex-row ">
       <div className="flex flex-row gap-3 items-center">
-        <ProfilePic image={image} />
+        <ProfilePic
+          image={image}
+          defaultColor={defaultColor}
+          displayName={username}
+        />
         <div className="flex flex-col">
           <p className="text-white">{username}</p>
           <small className="text-mainGray">{_id}</small>
@@ -57,4 +61,4 @@ const Contact = ({ username, image, _id }) => {
   );
 };
 
-export default Contact;
+export default ContactBoxWithoutSelect;

@@ -1,17 +1,18 @@
 import React from "react";
 
-const MessagePic = ({ image }) => {
+const MessagePic = ({ image, defaultColor, displayName }) => {
   return (
     <div
-      className={`w-[38px] ${
-        !image && `p-2`
-      } bg-black border-2 border-midGray aspect-square rounded-full`}
+      style={{ backgroundColor: defaultColor }}
+      className={`w-[38px] border-2 border-midGray h-[38px] object-contain overflow-hidden flex items-center justify-center rounded-full`}
     >
-      <img
-        className={` w-full h-full ${image && `rounded-full`}`}
-        src={image ? image : "../userIcon.svg"}
-        alt=""
-      />
+      {image && image.url ? (
+        <img className={` w-full h-full `} src={image.url} alt="" />
+      ) : (
+        <p className="text-white text-[14px] font-bold ">
+          {displayName.toUpperCase()[0]}
+        </p>
+      )}
     </div>
   );
 };

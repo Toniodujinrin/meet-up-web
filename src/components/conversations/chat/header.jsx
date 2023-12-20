@@ -5,11 +5,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useContext } from "react";
 import { ConversationContext } from "../../../contexts/conversationContext";
 import { SocketContext } from "../../../contexts/socketContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ setCurrentDisplay, makeCall }) => {
   const navigate = useNavigate();
-  const { id } = useParams();
   dayjs.extend(relativeTime);
   const { conversationDetails } = useContext(ConversationContext);
   const { onlineGroupUsers, leaveConversation } = useContext(SocketContext);
@@ -28,15 +27,14 @@ const Header = ({ setCurrentDisplay, makeCall }) => {
         />
 
         <ProfilePic
-          image={
-            conversationDetails.conversationPic.url
-              ? conversationDetails.conversationPic.url
-              : conversationDetails.type == "single"
-              ? "../userIcon.svg"
-              : "../groupIcon.svg"
-          }
+          image={conversationDetails.conversationPic}
+          defaultColor={conversationDetails.defaultConversationColor}
+          displayName={conversationDetails.name}
         />
-        <div onClick={() => setCurrentDisplay("info")}>
+        <div
+          className="cursor-pointer"
+          onClick={() => setCurrentDisplay("info")}
+        >
           <p className="text-white font-semibold">{conversationDetails.name}</p>
           {conversationDetails.type == "single" ? (
             <small

@@ -9,16 +9,23 @@ import axios from "axios";
 import NotificationToast from "../components/notificationToast";
 
 //production server
-const URL = "https://meetup-server.top/";
+let URL = "https://meetup-server.top/";
+let withCredentials = true;
+let secure = true;
 
-//development server
-//const URL = "http://localhost:3003/";
+//console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV == "development") {
+  URL = "http://localhost:3003/";
+  withCredentials = false;
+  secure = false;
+}
 
 export const SocketContext = createContext();
 const sock = io(URL, {
   autoConnect: false,
-  withCredentials: true,
-  secure: true,
+  withCredentials,
+  secure,
 });
 
 const SocketContextProvider = ({ children }) => {
@@ -79,7 +86,7 @@ const SocketContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (location.pathname !== "/" && location.pathname !== "/login") {
+    if (location.pathname.includes("/main")) {
       //perform connection again when the page is re-loaded redirect user to main page
       connect();
       navigate("/main", { replace: true });
@@ -157,7 +164,6 @@ const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     if (newNotification.length > 0) {
       queryClient.invalidateQueries(["conversations"]);
-      console.log(newNotification);
       setNotifications(newNotification);
       toast.custom((t) => (
         <NotificationToast

@@ -20,7 +20,11 @@ const CallNotification = ({
           }}
           className=" bg-red-600 rounded-full w-[50px] aspect-square flex items-center justify-center"
         >
-          <img src="../endCallIcon.svg" className="w-[30px] h-[40px]" alt="" />
+          <img
+            src="../../endCallIcon.svg"
+            className="w-[30px] h-[40px]"
+            alt=""
+          />
         </button>
 
         <button
@@ -33,7 +37,7 @@ const CallNotification = ({
           }}
         >
           <img
-            src="../phoneIconWhite.svg"
+            src="../../phoneIconWhite.svg"
             className="w-[30px] h-[30px]"
             alt=""
           />

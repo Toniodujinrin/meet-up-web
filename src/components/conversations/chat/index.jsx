@@ -314,7 +314,7 @@ const Chat = () => {
               className="mx-auto w-fit p-2 mt-3 items-center border border-white flex flex-row gap-3 rounded-[20px] bg-midGray"
             >
               <img
-                src="../lockIconWhite.svg"
+                src="../../lockIconWhite.svg"
                 className="w-[20px] h-[20px]"
                 alt=""
               />

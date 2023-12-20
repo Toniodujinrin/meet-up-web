@@ -35,7 +35,7 @@ const Add = ({ setCurrentDisplay }) => {
         <div className="flex gap-3 items-center">
           <img
             onClick={() => setCurrentDisplay("info")}
-            src="../chevron.svg"
+            src="../../chevron.svg"
             className="w-[30px] h-[30px] cursor-pointer rotate-180 "
             alt=""
           />

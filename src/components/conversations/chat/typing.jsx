@@ -12,9 +12,9 @@ const Typing = ({ user }) => {
   return (
     <div className="flex flex-row gap-3 items-start ">
       <MessagePic
-        image={
-          userDetails && userDetails.profilePic && userDetails.profilePic.url
-        }
+        defaultColor={userDetails && userDetails.defaultProfileColor}
+        displayName={userDetails && userDetails.username}
+        image={userDetails && userDetails.profilePic}
       />
       <div className="text-white">
         <div

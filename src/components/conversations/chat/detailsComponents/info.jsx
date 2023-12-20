@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Contact from "../../../contacts/contacts";
+import Contact from "../../../contacts/contact-box-without-select";
 import { ConversationContext } from "../../../../contexts/conversationContext";
 import ButtonMain from "../../../buttonMain";
 import DangerButton from "../../../DangerButton";
@@ -29,7 +29,7 @@ const Info = ({ setCurrentDisplay }) => {
         <img
           onClick={() => setCurrentDisplay("chat")}
           className="flex cursor-pointer self-start w-[30px] h-[30px] rotate-180"
-          src="../chevron.svg"
+          src="../../chevron.svg"
           alt=""
         />
         <motion.div
@@ -43,14 +43,9 @@ const Info = ({ setCurrentDisplay }) => {
             setWebcamShowing={(v) => {
               console.log(v);
             }}
-            profilePic={
-              conversationDetails.conversationPic &&
-              conversationDetails.conversationPic.url
-                ? conversationDetails.conversationPic.url
-                : conversationDetails.type == "single"
-                ? "../userIcon.svg"
-                : "../groupIcon.svg"
-            }
+            defaultColor={conversationDetails.defaultConversationColor}
+            profilePic={conversationDetails.conversationPic}
+            displayName={conversationDetails.name}
           />
         </motion.div>
         <motion.h2
@@ -63,19 +58,6 @@ const Info = ({ setCurrentDisplay }) => {
         >
           {conversationDetails.name}
         </motion.h2>
-
-        {/* <div className='flex flex-row gap-6 mt-4 '>
-                <div className='flex flex-col items-center'>
-               
-                <img  className={'w-[30px] cursor-pointer'} src="../phoneIcon.svg" alt="" />
-                
-                <p className='text-mainGray text-[18px]'>Audio</p>
-                </div>
-                <div className='flex flex-col items-center'>
-                <img className={'w-[30px] cursor-pointer'} src="../videoIcon.svg" alt="" />
-                <p className='text-mainGray text-[18px]'>Video</p>
-                </div>
-            </div> */}
 
         <motion.div
           animate={{ x: 0 }}
@@ -96,9 +78,8 @@ const Info = ({ setCurrentDisplay }) => {
               <Contact
                 key={user._id}
                 username={user.username}
-                image={
-                  user.profilePic ? user.profilePic.url : "../userIcon.svg"
-                }
+                image={user.profilePic}
+                defaultColor={user.defaultProfileColor}
                 _id={user._id}
               />
             ))}

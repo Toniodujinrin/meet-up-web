@@ -15,7 +15,9 @@ const ConversationMessage = ({ body, timeStamp, senderId, status }) => {
     >
       {senderId._id !== user._id && (
         <MessagePic
-          image={senderId.profilePic ? senderId.profilePic.url : ""}
+          displayName={senderId.username}
+          defaultColor={senderId.defaultProfileColor}
+          image={senderId.profilePic}
         />
       )}
 
@@ -40,7 +42,9 @@ const ConversationMessage = ({ body, timeStamp, senderId, status }) => {
           {senderId._id == user._id ? (
             <small className="text-tekhelet">{status}</small>
           ) : (
-            <small className="text-tekhelet">{senderId.username}</small>
+            <small style={{ color: senderId.defaultProfileColor }} className="">
+              {senderId.username}
+            </small>
           )}
         </div>
       </div>

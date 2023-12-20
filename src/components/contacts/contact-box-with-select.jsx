@@ -1,7 +1,14 @@
 import React from "react";
-import ProfilePic from "../../profilePic";
+import ProfilePic from "../profilePic";
 
-const Contact = ({ username, image, _id, selected, select }) => {
+const ContactBoxWithSelect = ({
+  username,
+  image,
+  _id,
+  selected,
+  select,
+  defaultColor,
+}) => {
   return (
     <div
       onClick={() => select(_id)}
@@ -12,7 +19,11 @@ const Contact = ({ username, image, _id, selected, select }) => {
           selected.includes(_id) && "bg-tekhelet border-0"
         }  border-mainGray border-2 rounded-full`}
       ></div>
-      <ProfilePic image={image} />
+      <ProfilePic
+        image={image}
+        defaultColor={defaultColor}
+        displayName={username}
+      />
       <div>
         <p className="text-white">{username}</p>
         <small className="text-mainGray">{_id}</small>
@@ -21,4 +32,4 @@ const Contact = ({ username, image, _id, selected, select }) => {
   );
 };
 
-export default Contact;
+export default ContactBoxWithSelect;

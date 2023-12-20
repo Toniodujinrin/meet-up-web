@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProfilePic = ({ image, type }) => {
+const ProfilePic = ({ image, type, defaultColor, displayName }) => {
   return (
     <div>
       {type == "online" && (
@@ -8,15 +8,20 @@ const ProfilePic = ({ image, type }) => {
       )}
 
       <div
-        className={`w-[50px] ${
-          image.includes("svg") && `p-2`
-        }   aspect-square rounded-full`}
+        style={{ backgroundColor: defaultColor }}
+        className={`w-[50px] aspect-square flex items-center justify-center rounded-full`}
       >
-        <img
-          className={` w-full h-full ${image && `rounded-full`}`}
-          src={image}
-          alt=""
-        />
+        {image && image.url ? (
+          <img
+            className={` w-full h-full ${image && `rounded-full`}`}
+            src={image.url}
+            alt=""
+          />
+        ) : (
+          <p className="text-white font-bold text-[24px]">
+            {displayName.toUpperCase()[0]}
+          </p>
+        )}
       </div>
     </div>
   );

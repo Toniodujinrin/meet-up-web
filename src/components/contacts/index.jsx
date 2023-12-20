@@ -4,12 +4,18 @@ import PendingContactsSent from "./pendingSent";
 import PendingContactsReceived from "./pendingReceived";
 import AddUsers from "./addContacts";
 import BackArrow from "../backArrow";
-import ButtonMain from "../buttonMain";
+import { useLocation } from "react-router-dom";
 
 const ContactsComp = () => {
   const [currentPage, setCurrentPage] = useState("current");
   const [dropDownShowing, setDropDownShowing] = useState(false);
   const dropDownRef = useRef();
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state && location.state.type) {
+      setCurrentPage(location.state.type);
+    }
+  }, []);
   const dropDownToggleRef = useRef();
   const handleCloseDropDown = (e) => {
     if (
