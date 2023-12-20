@@ -6,7 +6,7 @@ const BackArrow = () => {
   return (
     <img
       onClick={() => navigate("/main")}
-      src="../chevron.svg"
+      src="../../chevron.svg"
       className="w-[30px] h-[30px] cursor-pointer rotate-180 lg:hidden"
       alt=""
     />
