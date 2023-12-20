@@ -1,15 +1,24 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import InputGroup from "../../components/inputGroup";
 import { signUpSchema } from "../../schemas";
 import { useNavigate } from "react-router-dom";
 import { SignUpContext } from "../../contexts/SignUpContext";
+import { SocketContext } from "../../contexts/socketContext";
 import { motion } from "framer-motion";
 const Signup = () => {
   const navigate = useNavigate();
   const { signUpProcessLoading, signUp } = useContext(SignUpContext);
+  const { connect } = useContext(SocketContext);
   const [email, setEmail] = useState("");
   const [password, setPassoword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  useEffect(() => {
+    if (user && user.isVerified) {
+      connect();
+      navigate("/main");
+    }
+  }, [user]);
   const [errors, setErrors] = useState({
     password: "",
     email: "",

@@ -17,7 +17,7 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
     >
       <img
         onClick={() => setDeleteShowing(false)}
-        src="../close.svg"
+        src="../../close.svg"
         className=" flex self-end w-[20px] h-[20px] cursor-pointer"
         alt=""
       />

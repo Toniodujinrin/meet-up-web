@@ -8,7 +8,13 @@ import DeletePopUp from "../conversations/chat/detailsComponents/deletePopUp";
 import BigPhoto from "../bigPhoto";
 import { AnimatePresence, motion } from "framer-motion";
 const Details = ({ setWebcamShowing }) => {
-  const { user, updateUser, updateProcessLoading } = useContext(UserContext);
+  const {
+    user,
+    updateUser,
+    updateProcessLoading,
+    removeProfilePic,
+    removeProfilePicLoading,
+  } = useContext(UserContext);
   const [username, setusername] = useState(user.username);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
@@ -200,17 +206,18 @@ const Details = ({ setWebcamShowing }) => {
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
+            disabled={removeProfilePicLoading}
             onClick={(e) => {
-              //setWebcamShowing(true);
+              removeProfilePic();
             }}
             className={`bg-midGray
-            } text-white py-2 mt-4 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}
+            } text-white py-2 mt-4 gap-2 self-start rounded-[5px] flex items-center justify-center w-[200px] mb-4 `}
           >
             <img
-              className="w-[25px] aspect-square"
-              src="../camera2.svg
+              className="w-[20px] aspect-square"
+              src="../close.svg
             "
-              alt="camera icon"
+              alt="close icon"
             />
             <p>Remove Photo</p>
           </motion.button>

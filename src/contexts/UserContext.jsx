@@ -23,6 +23,7 @@ const UserContextProvider = ({ children }) => {
   const [updateProcessLoading, setUpdateProcessLoading] = useState(false);
   const [profilePicLoading, setProfilePicLoading] = useState(false);
   const [deleteAccountLoading, setDeleteAccountLoading] = useState(false);
+  const [removeProfilePicLoading, setRemoveProfilePicLoading] = useState(false);
 
   const authenticate = async (payload) => {
     try {
@@ -150,6 +151,19 @@ const UserContextProvider = ({ children }) => {
       setProfilePicLoading(false);
     }
   };
+
+  const removeProfilePic = async (payload) => {
+    try {
+      setRemoveProfilePicLoading(true);
+      await _delete("users/removeProfilePic");
+      queryClient.invalidateQueries(["user"]);
+      toast.success("profile updated");
+    } catch (error) {
+      toast.error("could not remove profile picture");
+    } finally {
+      setRemoveProfilePicLoading(false);
+    }
+  };
   const deleteAccount = async () => {
     try {
       setDeleteAccountLoading(true);
@@ -193,6 +207,8 @@ const UserContextProvider = ({ children }) => {
         getContacts,
         logout,
         setUserConversations,
+        removeProfilePic,
+        removeProfilePicLoading,
       }}
     >
       {children}

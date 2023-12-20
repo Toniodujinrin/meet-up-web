@@ -22,7 +22,7 @@ const NotificationToast = ({ t, newNotification, navigate, location }) => {
         <div className="flex items-start justify-center">
           <img
             className="w-[25px] h-[25px]"
-            src="../newMessageNotification.svg"
+            src="../../newMessageNotification.svg"
             alt=""
           />
           <div className="ml-3 flex-1 text-white">
