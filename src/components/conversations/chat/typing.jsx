@@ -22,7 +22,9 @@ const Typing = ({ user }) => {
         >
           <div className="dot-typing"></div>
         </div>
-        <small className="text-tekhelet">
+        <small
+          style={{ color: userDetails && userDetails.defaultProfileColor }}
+        >
           {userDetails ? userDetails.username : ""}
         </small>
       </div>
