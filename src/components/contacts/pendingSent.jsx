@@ -36,7 +36,7 @@ const PendingContactsSent = () => {
         setValue={setValue}
         placeholder={"search for a contact"}
       />
-      <div className="w-full h-full lg:grid grid-cols-3 flex gap-4 flex-col items-center">
+      <div>
         <ContactList
           select={null}
           selected={null}

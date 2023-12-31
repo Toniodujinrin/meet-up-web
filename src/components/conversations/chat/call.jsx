@@ -27,7 +27,7 @@ const CallComp = ({
         )}
 
         <video
-          className={` lg:w-[150px] lg:h-[250px] w-[100px] mb-4 mr-4 object-cover flex self-end  absolute rounded-[25px] h-[200px]`}
+          className={` lg:w-[150px] lg:h-[250px] w-[100px] mb-4 mr-4 object-cover flex self-end  absolute rounded-[25px] h-[150px]`}
           playsInline
           muted
           ref={selfVideo}

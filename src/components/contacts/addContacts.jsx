@@ -28,7 +28,7 @@ const AddUsers = () => {
         {userSearchLoading ? (
           <div className="loader"></div>
         ) : (
-          <div className="flex flex-col gap-4 lg:grid grid-cols-3 w-full h-full ">
+          <div className="flex flex-col w-full h-full ">
             <ContactList
               select={null}
               selected={null}
