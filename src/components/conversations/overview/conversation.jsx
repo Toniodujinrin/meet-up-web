@@ -68,16 +68,14 @@ const Conversation = ({
                     <img
                       className="w-[18px] aspect-square"
                       src={`${
-                        lastMessage.status == "delivered"
+                        amount > 0
                           ? `../../newMessageIcon.svg`
                           : `../../readMessageIcon.svg`
                       }`}
                       alt=""
                     />
                     <p className="text-[16px]">
-                      {lastMessage.status == "delivered"
-                        ? "new Message"
-                        : "opened"}
+                      {amount > 0 ? "new Message" : "opened"}
                     </p>
                   </div>
                 )}
