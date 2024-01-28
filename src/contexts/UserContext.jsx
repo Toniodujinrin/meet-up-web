@@ -14,6 +14,7 @@ const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [authenticationProcessLoading, setAuthenticationProcessLoading] =
     useState(false);
+  const [userDetails, setUserDetails] = useState({});
   const [userConversations, setUserConversations] = useState([]);
   const [userContacts, setUserContacts] = useState([]);
   const [pendingSent, setPendingSent] = useState([]);
@@ -24,6 +25,8 @@ const UserContextProvider = ({ children }) => {
   const [profilePicLoading, setProfilePicLoading] = useState(false);
   const [deleteAccountLoading, setDeleteAccountLoading] = useState(false);
   const [removeProfilePicLoading, setRemoveProfilePicLoading] = useState(false);
+  const [getUserDetailsLoading, setGetUserDetailsLoading] = useState(false);
+  const [contactPopUpShowing, setContactPopUpShowing] = useState(false);
 
   const authenticate = async (payload) => {
     try {
@@ -179,6 +182,19 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  //for getting another users data
+  const getUserDetails = async (id) => {
+    try {
+      setGetUserDetailsLoading(true);
+      const { data } = await get(`users/${id}`);
+      if (data) setUserDetails(data);
+    } catch (error) {
+      toast.error("could not get details");
+    } finally {
+      setGetUserDetailsLoading(false);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -209,6 +225,11 @@ const UserContextProvider = ({ children }) => {
         setUserConversations,
         removeProfilePic,
         removeProfilePicLoading,
+        getUserDetails,
+        userDetails,
+        contactPopUpShowing,
+        setContactPopUpShowing,
+        getUserDetailsLoading,
       }}
     >
       {children}

@@ -11,6 +11,8 @@ const ContactBoxWithoutSelect = ({ username, image, _id, defaultColor }) => {
     pendingSent,
     sendRequest,
     acceptRequest,
+    getUserDetails,
+    setContactPopUpShowing,
   } = useContext(UserContext);
   const contacts = userContacts.map((contact) => {
     return contact._id;
@@ -23,7 +25,13 @@ const ContactBoxWithoutSelect = ({ username, image, _id, defaultColor }) => {
   });
   return (
     <div className="bg-midGray cursor-pointer rounded-md lg:w-[300px] w-full  justify-between p-3 h-[80px] items-center flex flex-row ">
-      <div className="flex flex-row gap-3 items-center">
+      <div
+        onClick={() => {
+          getUserDetails(_id);
+          setContactPopUpShowing(true);
+        }}
+        className="flex flex-row gap-3 items-center"
+      >
         <ProfilePic
           image={image}
           defaultColor={defaultColor}

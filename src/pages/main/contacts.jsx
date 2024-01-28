@@ -4,6 +4,7 @@ import { UserContext } from "../../contexts/UserContext";
 import ContactsComp from "../../components/contacts";
 import { useQueries } from "react-query";
 import LoadingPage from "../../components/loadingPage";
+import ContactPopUp from "../../components/contacts/contactPopUp";
 
 const Contacts = () => {
   const {
@@ -12,6 +13,7 @@ const Contacts = () => {
     getContacts,
     getPendingSent,
     getPendingReceived,
+    contactPopUpShowing,
   } = useContext(UserContext);
   const [q1, q2, q3, q4, q5] = useQueries([
     { queryKey: ["user"], queryFn: getSelf },
@@ -35,7 +37,12 @@ const Contacts = () => {
           <div className="lg:w-[40%] lg:flex hidden bg-darkGray  w-full border-r border-mediumGray ">
             <Overview />
           </div>
-          <div className="lg:w-[60%] w-full h-full">
+          <div
+            className={`lg:w-[60%] ${
+              contactPopUpShowing && "justify-center flex flex-col items-center"
+            }  w-full h-full`}
+          >
+            {contactPopUpShowing && <ContactPopUp />}
             <ContactsComp />
           </div>
         </div>

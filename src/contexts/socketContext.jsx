@@ -122,19 +122,21 @@ const SocketContextProvider = ({ children }) => {
   }, [finishedTyper]);
 
   useEffect(() => {
-    try {
-      queryClient.invalidateQueries(["conversations"]);
-      if (newMessage && groupKey) {
-        const _newMessage = newMessage;
-        _newMessage.body = JSON.parse(
-          encryption.decryptMessage(_newMessage.body, groupKey)
-        );
-        if (_newMessage.senderId._id !== user._id) {
-          socket.emit("messageRead", { conversationId: currentConversation });
+    if (newMessage) {
+      try {
+        queryClient.invalidateQueries(["conversations"]);
+        if (newMessage && groupKey) {
+          newMessage.body = JSON.parse(
+            encryption.decryptMessage(newMessage.body, groupKey)
+          );
+          if (newMessage.senderId._id !== user._id) {
+            socket.emit("messageRead", { conversationId: currentConversation });
+          }
+          setMessages([...messages, newMessage]);
+          setNewMessage(null);
         }
-        setMessages([...messages, _newMessage]);
-      }
-    } catch (error) {}
+      } catch (error) {}
+    }
   }, [newMessage]);
 
   useEffect(() => {
@@ -147,16 +149,17 @@ const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      if (groupKey && previousMessages) {
-        const _previousMessages = [...previousMessages];
-        _previousMessages.map((message) => {
-          if (typeof message.body == "string")
+      if (groupKey && previousMessages.length > 0) {
+        previousMessages.map((message) => {
+          if (typeof message.body == "string") {
+            console.log(message.body);
             message.body = JSON.parse(
               encryption.decryptMessage(message.body, groupKey)
             );
+          }
         });
-        setMessages(_previousMessages);
-        setPreviousMessages();
+        setMessages(previousMessages);
+        setPreviousMessages([]);
       }
     } catch (error) {}
   }, [groupKey, previousMessages]);
