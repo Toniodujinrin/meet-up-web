@@ -293,7 +293,9 @@ const Chat = () => {
   };
 
   return (
-    <div className={`${incomingCall && `flex items-center justify-center`}`}>
+    <div
+      className={`w-full ${incomingCall && `flex items-center justify-center`}`}
+    >
       {incomingCall && (
         <CallNotification
           answerCall={answerCall}

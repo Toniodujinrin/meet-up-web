@@ -63,19 +63,16 @@ const UserContextProvider = ({ children }) => {
   };
 
   const getSelf = async () => {
-    //if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/self");
     if (data) return setUser(data);
   };
 
   const getConversations = async () => {
-    // if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/conversations");
     if (data) return setUserConversations(data);
   };
 
   const getContacts = async () => {
-    // if (!checkForToken()) return navigate("/login", { replace: true });
     const { data } = await get("users/contacts");
     if (data) return setUserContacts(data);
   };
@@ -155,7 +152,7 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
-  const removeProfilePic = async (payload) => {
+  const removeProfilePic = async () => {
     try {
       setRemoveProfilePicLoading(true);
       await _delete("users/removeProfilePic");

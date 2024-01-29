@@ -4,13 +4,16 @@ const BigPhoto = ({
   setWebcamShowing,
   displayName,
   defaultColor,
+  medium = false,
   changeImage = true,
 }) => {
   return (
     <>
       <div
         style={{ backgroundColor: defaultColor }}
-        className={` lg:w-[200px] w-[180px] bg-black flex items-center justify-center border-4 border-midGray aspect-square overflow-hidden rounded-full`}
+        className={` ${
+          medium ? "w-[100px]" : "lg:w-[200px] w-[180px]"
+        }  bg-black flex items-center justify-center border-4 border-midGray aspect-square overflow-hidden rounded-full`}
       >
         {profilePic && profilePic.url ? (
           <img

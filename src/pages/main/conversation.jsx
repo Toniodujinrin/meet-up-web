@@ -7,6 +7,8 @@ import LoadingPage from "../../components/loadingPage";
 import { useParams } from "react-router-dom";
 import { SocketContext } from "../../contexts/socketContext";
 import { ConversationContext } from "../../contexts/conversationContext";
+import ContactPopUp from "../../components/contacts/contactPopUp";
+
 const Conversation = () => {
   const { id } = useParams();
   const { getConversation, conversationDetails } =
@@ -16,7 +18,8 @@ const Conversation = () => {
     getConversation(id);
     joinConversation(id);
   }, [id]);
-  const { getSelf, getConversations } = useContext(UserContext);
+  const { getSelf, getConversations, contactPopUpShowing } =
+    useContext(UserContext);
   const [q1, q2] = useQueries([
     { queryKey: ["user"], queryFn: getSelf },
     { queryKey: ["conversations"], queryFn: getConversations },
@@ -32,7 +35,12 @@ const Conversation = () => {
           <div className="lg:w-[40%] lg:flex hidden bg-darkGray  w-full border-r border-mediumGray ">
             <Overview />
           </div>
-          <div className="lg:w-[60%] w-full">
+          <div
+            className={`lg:w-[60%]  ${
+              contactPopUpShowing && "justify-center flex flex-col items-center"
+            } w-screen h-full `}
+          >
+            {contactPopUpShowing && <ContactPopUp />}
             {conversationDetails && <Chat />}
           </div>
         </div>
