@@ -16,7 +16,7 @@ const AddUsers = () => {
   }, [value]);
 
   return (
-    <div>
+    <div className="w-full h-full">
       <SearchBar
         value={value}
         setValue={setValue}
@@ -24,18 +24,20 @@ const AddUsers = () => {
         handleSearch={searchUsers}
       />
 
-      <div className="w-full h-full  flex  items-center justify-center">
+      <div
+        className={`w-full h-full  flex flex-col  ${
+          userSearchLoading && ` items-center justify-center`
+        }`}
+      >
         {userSearchLoading ? (
           <div className="loader"></div>
         ) : (
-          <div className="flex flex-col w-full h-full ">
-            <ContactList
-              select={null}
-              selected={null}
-              contacts={searchedUsers}
-              shouldSelect={false}
-            />
-          </div>
+          <ContactList
+            select={null}
+            selected={null}
+            contacts={searchedUsers}
+            shouldSelect={false}
+          />
         )}
       </div>
     </div>

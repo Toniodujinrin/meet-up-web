@@ -7,12 +7,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 const ContactPopUp = () => {
   const { userDetails, setContactPopUpShowing, getUserDetailsLoading } =
     useContext(UserContext);
+  dayjs.extend(relativeTime);
   return (
     <motion.div
       animate={{ y: 0, opacity: 1 }}
       initial={{ y: -30, opacity: 0 }}
       exit={{ y: 30, opacity: 0 }}
-      className="lg:w-[400px] w-[80%] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-mainGray rounded-md"
+      className="lg:w-[400px] w-[80%] flex items-center  flex-col p-3 h-[300px] absolute  bg-black z-30  border border-mainGray rounded-md"
     >
       <img
         onClick={() => setContactPopUpShowing(false)}
