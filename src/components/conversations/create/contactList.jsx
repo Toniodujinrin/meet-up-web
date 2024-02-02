@@ -23,9 +23,12 @@ const ContactList = ({ selected, select, contacts, shouldSelect = true }) => {
   return (
     <>
       {contactList.map((alphabet) => (
-        <div key={alphabet.letter} className="flex flex-col my-4 items-start">
+        <div
+          key={alphabet.letter}
+          className="flex flex-col w-full my-4 items-start"
+        >
           <h1 className="text-white text-[21px]">{alphabet.letter}</h1>
-          <div className="w-full lg:flex-wrap flex flex-col  mt-4 gap-4">
+          <div className="w-full flex-wrap flex   mt-4 gap-4">
             {shouldSelect
               ? alphabet.listOfContacts.map((contact) => (
                   <ContactBoxWithSelect

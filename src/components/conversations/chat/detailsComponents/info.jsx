@@ -73,7 +73,7 @@ const Info = ({ setCurrentDisplay }) => {
               />
             )}
           </div>
-          <div className="flex flex-col items-center mb-[50px]  w-full gap-3 mt-4 lg:grid grid-cols-3">
+          <div className="flex flex-wrap items-center mb-[50px]  w-full gap-3 mt-4 ">
             {conversationDetails.users.map((user) => (
               <Contact
                 key={user._id}
