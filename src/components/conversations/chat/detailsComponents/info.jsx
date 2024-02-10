@@ -12,7 +12,7 @@ const Info = ({ setCurrentDisplay }) => {
   const [deleteShowing, setDeleteShowing] = useState(false);
   const [deleteAction, setDeleteAction] = useState("");
   return (
-    <div className="flex items-center  bg-black  justify-center">
+    <div className={`flex flex-col items-center h-full bg-black `}>
       <AnimatePresence>
         {deleteShowing && (
           <DeletePopUp
@@ -22,9 +22,9 @@ const Info = ({ setCurrentDisplay }) => {
         )}
       </AnimatePresence>
       <div
-        className={`flex flex-col items-center justify-center ${
+        className={`flex flex-col items-center p-4 w-full   ${
           deleteShowing && `blur-lg`
-        }   p-4 w-full  `}
+        }`}
       >
         <img
           onClick={() => setCurrentDisplay("chat")}

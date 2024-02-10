@@ -294,7 +294,9 @@ const Chat = () => {
 
   return (
     <div
-      className={`w-full ${incomingCall && `flex items-center justify-center`}`}
+      className={`h-screen overflow-y-scroll w-full ${
+        incomingCall && `flex flex-col items-center `
+      }`}
     >
       {incomingCall && (
         <CallNotification
@@ -307,7 +309,7 @@ const Chat = () => {
         />
       )}
       {currentDisplay == "chat" && (
-        <div className="h-screen w-full flex flex-col">
+        <div className=" h-full w-full flex flex-col">
           <Header setCurrentDisplay={setCurrentDisplay} makeCall={makeCall} />
           <div className="bg-black flex justify-center items-center flex-col w-full h-[calc(100vh-200px)]">
             <motion.div

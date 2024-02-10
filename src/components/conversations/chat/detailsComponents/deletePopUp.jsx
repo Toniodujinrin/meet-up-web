@@ -13,7 +13,7 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
       animate={{ y: 0, opacity: 1 }}
       initial={{ y: -30, opacity: 0 }}
       exit={{ y: 30, opacity: 0 }}
-      className="lg:w-[400px] w-[80%] flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-mainGray rounded-md"
+      className="lg:w-[400px] w-[80%] top-[200px]  flex items-center  flex-col p-3 h-[300px] absolute bg-black z-30  border border-mainGray rounded-md"
     >
       <img
         onClick={() => setDeleteShowing(false)}

@@ -9,7 +9,7 @@ const CallNotification = ({
   call,
 }) => {
   return (
-    <div className="w-[300px] h-fit  absolute p-4  flex flex-col items-center  bg-midGray rounded-lg">
+    <div className="w-[300px] h-fit top-[200px]  absolute p-4  flex flex-col items-center  bg-midGray rounded-lg">
       <h1 className="text-white text-[28px] mb-4 font-semibold">
         Incoming Call{" "}
       </h1>
