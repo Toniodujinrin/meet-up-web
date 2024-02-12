@@ -37,7 +37,7 @@ const Create = () => {
   };
 
   return (
-    <div className="w-full overflow-y-scroll h-screen   p-4">
+    <div className="w-full overflow-y-scroll bg-darkGray h-full  lg:w-[60%]  p-4">
       <div className="flex flex-row justify-between mb-4">
         <div className="flex gap-3 items-center">
           <BackArrow />

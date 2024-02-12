@@ -8,9 +8,9 @@ const OnlineUsers = () => {
   const { onlineContacts } = useContext(SocketContext);
 
   return (
-    <div className="w-full p-4 ">
+    <div className="w-full px-4 ">
       <h1 className="text-white text-[21px]">Online</h1>
-      <div className="flex flex-row gap-4 mt-3 overflow-scroll overflow-y-hidden scroll  pb-3">
+      <div className="flex flex-row space-x-4  overflow-scroll overflow-y-hidden scroll ">
         {userContacts.map((user, index) => (
           <div
             key={index}

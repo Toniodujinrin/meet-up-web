@@ -36,7 +36,7 @@ const ContactsComp = () => {
   });
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-screen overflow-y-scroll p-4">
       <div className="w-full flex flex-row items-start justify-between">
         {currentPage === "add" ? (
           <div className=" flex flex-row gap-2 items-center">

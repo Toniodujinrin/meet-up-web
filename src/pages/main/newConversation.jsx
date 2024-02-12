@@ -19,13 +19,12 @@ const NewConversation = () => {
       ) : q1.isError || q2.isError || q3.isError ? (
         <div className="w-screen h-screen bg-darkGray"></div>
       ) : (
-        <div className="flex w-screen min-h-screen bg-darkGray justify-between">
+        <div className="flex w-screen h-screen bg-darkGray justify-between">
           <div className="lg:w-[40%] lg:flex hidden  w-full border-r border-mediumGray ">
             <Overview />
           </div>
-          <div className="lg:w-[60%] bg-darkGray w-full">
-            <Create />
-          </div>
+
+          <Create />
         </div>
       )}
     </>

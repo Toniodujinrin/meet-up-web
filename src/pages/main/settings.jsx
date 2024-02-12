@@ -22,9 +22,8 @@ const Settings = () => {
           <div className="lg:w-[40%] lg:flex hidden bg-darkGray  w-full border-r border-mediumGray ">
             <Overview />
           </div>
-          <div className="lg:w-[60%] w-full h-screen overflow-y-scroll">
-            <SettingsComp />
-          </div>
+
+          <SettingsComp />
         </div>
       )}
     </>
