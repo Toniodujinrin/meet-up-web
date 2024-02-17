@@ -12,8 +12,8 @@ const BigPhoto = ({
       <div
         style={{ backgroundColor: defaultColor }}
         className={` ${
-          medium ? "w-[100px]" : "lg:w-[200px] w-[180px]"
-        }  bg-black flex items-center justify-center border-4 border-midGray aspect-square overflow-hidden rounded-full`}
+          medium ? "w-[70px]" : "lg:w-[200px] w-[180px]"
+        }  bg-black flex items-center justify-center  aspect-square overflow-hidden rounded-full`}
       >
         {profilePic && profilePic.url ? (
           <img
@@ -22,7 +22,11 @@ const BigPhoto = ({
             alt=""
           />
         ) : (
-          <p className="text-white lg:text-[60px] text-[45px] font-bold">
+          <p
+            className={`text-white  font-bold ${
+              medium ? `text-[36px]` : `lg:text-[60px] text-[45px]`
+            }`}
+          >
             {displayName.toUpperCase()[0]}
           </p>
         )}
