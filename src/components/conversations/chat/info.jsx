@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import Contact from "../../../contacts/contact-box-without-select";
-import { ConversationContext } from "../../../../contexts/conversationContext";
-import ButtonMain from "../../../buttonMain";
-import DangerButton from "../../../DangerButton";
-import DeletePopUp from "./deletePopUp";
-import BigPhoto from "../../../bigPhoto";
+import Contact from "../../contacts/contact-box-without-select";
+import { ConversationContext } from "../../../contexts/conversationContext";
+import ButtonMain from "../../buttonMain";
+import DangerButton from "../../DangerButton";
+import DeletePopUp from "../../popUps/deletePopUp";
+import BigPhoto from "../../bigPhoto";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Info = ({ setCurrentDisplay }) => {
@@ -39,7 +39,7 @@ const Info = ({ setCurrentDisplay }) => {
           className="flex items-end flex-col"
         >
           <BigPhoto
-            changeImage={conversationDetails.type == "group"}
+            changeImage={conversationDetails.type === "group"}
             setWebcamShowing={(v) => {
               console.log(v);
             }}
@@ -53,7 +53,7 @@ const Info = ({ setCurrentDisplay }) => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
           className={`text-white text-[24px] ${
-            conversationDetails.type == "single" && `mt-4`
+            conversationDetails.type === "single" && `mt-4`
           }`}
         >
           {conversationDetails.name}
@@ -66,7 +66,7 @@ const Info = ({ setCurrentDisplay }) => {
         >
           <div className="flex flex-row justify-between items-center">
             <h1 className="text-white text-[21px]">Members</h1>
-            {conversationDetails.type == "group" && (
+            {conversationDetails.type === "group" && (
               <ButtonMain
                 text={"Add"}
                 onClick={() => setCurrentDisplay("add")}

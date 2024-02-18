@@ -1,7 +1,7 @@
 import React from "react";
-import DangerButton from "../../../DangerButton";
-import { ConversationContext } from "../../../../contexts/conversationContext";
-import { UserContext } from "../../../../contexts/UserContext";
+import DangerButton from "../DangerButton";
+import { ConversationContext } from "../../contexts/conversationContext";
+import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
 import { motion } from "framer-motion";
 const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
@@ -21,32 +21,32 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
         className=" flex self-end w-[20px] h-[20px] cursor-pointer"
         alt=""
       />
-      {deleteAction == "leave" && (
+      {deleteAction === "leave" && (
         <h1 className="text-white text-[21px] my-8 text-center">
-          Are you sure you want to leave this conversation, you wiNll not be
-          able to enter join again untill someone adds you back
+          Are you sure you want to leave this conversation, you will not be able
+          to enter join again untill someone adds you back
         </h1>
       )}
-      {deleteAction == "account" && (
+      {deleteAction === "account" && (
         <h1 className="text-white text-[21px] my-8 text-center">
           Are you sure you want to delete your account, This action is
           irreversible !
         </h1>
       )}
-      {deleteAction == "delete" && (
+      {deleteAction === "delete" && (
         <h1 className="text-white text-[21px] my-8 text-center">
           Are you sure you want to delete this conversation? This action is
           irreversible.
         </h1>
       )}
-      {deleteAction == "leave" && (
+      {deleteAction === "leave" && (
         <DangerButton
           loading={conversationProcessLoading}
           onClick={() => leaveConversation()}
           text={"Leave Conversation"}
         />
       )}
-      {deleteAction == "account" && (
+      {deleteAction === "account" && (
         <DangerButton
           loading={deleteAccountLoading}
           onClick={() => {
@@ -56,7 +56,7 @@ const DeletePopUp = ({ setDeleteShowing, deleteAction }) => {
         />
       )}
 
-      {deleteAction == "delete" && (
+      {deleteAction === "delete" && (
         <DangerButton
           text={"Delete Conversation"}
           onClick={() => {

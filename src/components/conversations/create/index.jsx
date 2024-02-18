@@ -19,7 +19,7 @@ const Create = () => {
     let payload = {
       users: selected,
     };
-    if (selected.length == 1) {
+    if (selected.length === 1) {
       payload.type = "single";
     } else {
       payload.type = "group";
@@ -37,7 +37,7 @@ const Create = () => {
   };
 
   return (
-    <div className="w-full overflow-y-scroll bg-darkGray h-full  lg:w-[60%]  p-4">
+    <div className="w-full overflow-y-scroll bg-darkGray h-full p-4">
       <div className="flex flex-row justify-between mb-4">
         <div className="flex gap-3 items-center">
           <BackArrow />
@@ -60,7 +60,7 @@ const Create = () => {
             <ButtonMain
               onClick={handleCreate}
               disabled={
-                selected.length == 0 ||
+                selected.length === 0 ||
                 (selected.length > 1 && name.length === 0)
               }
               text={"Create"}

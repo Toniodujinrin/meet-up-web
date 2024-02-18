@@ -4,7 +4,7 @@ import InputGroup from "../inputGroup";
 import { UserContext } from "../../contexts/UserContext";
 import { verifyAccountSchema } from "../../schemas";
 import DangerButton from "../DangerButton";
-import DeletePopUp from "../conversations/chat/detailsComponents/deletePopUp";
+import DeletePopUp from "../popUps/deletePopUp";
 import BigPhoto from "../bigPhoto";
 import { AnimatePresence, motion } from "framer-motion";
 const Details = ({ setWebcamShowing }) => {

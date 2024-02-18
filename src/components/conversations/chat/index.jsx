@@ -10,8 +10,8 @@ import Typing from "./typing";
 import SimplePeer from "simple-peer";
 import { ConversationContext } from "../../../contexts/conversationContext";
 import ConversationMessage from "./conversationMessage";
-import Info from "./detailsComponents/info";
-import Add from "./detailsComponents/add";
+import Info from "./info";
+import Add from "./add";
 import { motion } from "framer-motion";
 import CallComp from "./call";
 import { toast } from "react-hot-toast";
@@ -308,7 +308,7 @@ const Chat = () => {
           call={call}
         />
       )}
-      {currentDisplay == "chat" && (
+      {currentDisplay === "chat" && (
         <div className=" h-full w-full flex flex-col">
           <Header setCurrentDisplay={setCurrentDisplay} makeCall={makeCall} />
           <div className="bg-black flex justify-center items-center flex-col w-full h-[calc(100vh-200px)]">
@@ -360,11 +360,13 @@ const Chat = () => {
         </div>
       )}
 
-      {currentDisplay == "info" && (
+      {currentDisplay === "info" && (
         <Info setCurrentDisplay={setCurrentDisplay} />
       )}
-      {currentDisplay == "add" && <Add setCurrentDisplay={setCurrentDisplay} />}
-      {currentDisplay == "call" && (
+      {currentDisplay === "add" && (
+        <Add setCurrentDisplay={setCurrentDisplay} />
+      )}
+      {currentDisplay === "call" && (
         <CallComp
           conversationDetails={conversationDetails}
           selfVideo={selfVideo}

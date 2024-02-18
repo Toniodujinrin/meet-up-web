@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { ConversationContext } from "../../../../contexts/conversationContext";
-import { SocketContext } from "../../../../contexts/socketContext";
-import ContactList from "../../create/contactList";
-import { UserContext } from "../../../../contexts/UserContext";
+import { ConversationContext } from "../../../contexts/conversationContext";
+import { SocketContext } from "../../../contexts/socketContext";
+import ContactList from "../create/contactList";
+import { UserContext } from "../../../contexts/UserContext";
 
 const Add = ({ setCurrentDisplay }) => {
   const [selected, setSelected] = useState([]);
@@ -43,7 +43,7 @@ const Add = ({ setCurrentDisplay }) => {
         </div>
         <button
           onClick={handleAdd}
-          disabled={selected.length == 0}
+          disabled={selected.length === 0}
           className="py-2 w-[100px] flex items-center justify-center bg-tekhelet rounded-lg text-white"
         >
           {conversationProcessLoading ? (

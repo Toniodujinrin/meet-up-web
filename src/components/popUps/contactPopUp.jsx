@@ -13,7 +13,7 @@ const ContactPopUp = () => {
       animate={{ y: 0, opacity: 1 }}
       initial={{ y: -30, opacity: 0 }}
       exit={{ y: 30, opacity: 0 }}
-      className="lg:w-[400px] w-[80%] flex items-start  flex-col p-3 h-fit absolute  bg-black z-30  border border-mainGray rounded-md"
+      className="lg:w-[400px] w-[80%] flex flex-col p-3 h-fit  min-h-[200px] absolute  bg-black z-30  border border-mainGray rounded-md"
     >
       <img
         onClick={() => setContactPopUpShowing(false)}
@@ -22,7 +22,7 @@ const ContactPopUp = () => {
         alt=""
       />
       {getUserDetailsLoading ? (
-        <div className="flex items-center w-full h-full justify-center">
+        <div className="flex items-center justify-center  w-full h-[180px] ">
           <div className="dot-typing"></div>
         </div>
       ) : userDetails ? (
