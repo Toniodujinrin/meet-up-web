@@ -7,7 +7,7 @@ import LoadingPage from "../../components/loadingPage";
 import { useParams } from "react-router-dom";
 import { SocketContext } from "../../contexts/socketContext";
 import { ConversationContext } from "../../contexts/conversationContext";
-import ContactPopUp from "../../components/contacts/contactPopUp";
+import ContactPopUp from "../../components/popUps/contactPopUp";
 
 const Conversation = () => {
   const { id } = useParams();

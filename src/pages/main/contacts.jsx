@@ -4,7 +4,7 @@ import { UserContext } from "../../contexts/UserContext";
 import ContactsComp from "../../components/contacts";
 import { useQueries } from "react-query";
 import LoadingPage from "../../components/loadingPage";
-import ContactPopUp from "../../components/contacts/contactPopUp";
+import ContactPopUp from "../../components/popUps/contactPopUp";
 
 const Contacts = () => {
   const {
